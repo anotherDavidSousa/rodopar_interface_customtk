@@ -5,9 +5,8 @@ import imagens.rotulos as rotulos
 from funcoes import RepetidorTeclas, wait_and_click, verifica_caps_lock, desativar_caps_lock
 from xml_process.XML import DadosXML, solicitar_caminho_xml
 import json
-
+tempo = 0.3
 repetidor = RepetidorTeclas()
-tempo = 0.2
 
 with open('produtos.json', 'r') as arquivo:
     produtos = json.load(arquivo)
@@ -106,7 +105,7 @@ class ProcessadorXML3:
                 time.sleep(tempo)
                 pyautogui.write(dados.cnpj_dest)
                 time.sleep(tempo)
-            elif dados.cnpj_emit == '08720614000664' and dados.cnpj_dest == '60894730002582' or dados.cnpj_emit == '25462356000259' and dados.cnpj_dest == '60894730002582' or dados.cnpj_emit =='17227422000105' and dados.cnpj_dest == '60894730002582':
+            elif dados.cnpj_emit == '08720614000664' and dados.cnpj_dest == '60894730002582' or dados.cnpj_emit == '25462356000259' and dados.cnpj_dest == '60894730002582' or dados.cnpj_emit =='17227422000105' and dados.cnpj_dest == '60894730002582' or dados.cnpj_emit == '08175256000141' and dados.cnpj_dest == '60894730002582':
                 wait_and_click(rotulos.imagens_adicionais,deslocamento_x=0)
                 time.sleep(tempo)
                 #wait_and_click(rotulos.imagens_adicionais,deslocamento_x=100, deslocamento_y=40)

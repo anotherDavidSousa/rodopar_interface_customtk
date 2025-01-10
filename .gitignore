@@ -1,0 +1,17 @@
+# Ignorar caches do Python
+__pycache__/
+*.py[cod]
+
+# Ignorar logs e dumps de depuração
+*.log
+*.sqlite3
+
+# Ignorar configurações do ambiente virtual
+venv/
+.env
+
+# Ignorar configurações de IDEs comuns
+.idea/
+.vscode/
+downloads/
+.downloads/

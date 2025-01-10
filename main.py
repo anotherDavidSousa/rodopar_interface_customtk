@@ -1,8 +1,11 @@
 import os
+import threading
+import pygame
 from PIL import Image
 import customtkinter as ctk
 import tkinter as tk
 from tkinter import messagebox
+import pdf_monitor
 from funcoes import deletar_xml_na_pasta
 from ost_dadosfixos.ost_bemisa import ost_bemisa
 from ost_dadosfixos.ost_bemisa_geral import ost_bemisa_geral
@@ -11,6 +14,27 @@ from xml_process.cte_xml import ProcessadorXML
 from xml_process.cte_xml_carga import ProcessadorXML2
 from xml_process.cte_xml_geral import ProcessadorXML3
 
+
+#EVENTOS DE MONITORAMENTE DE .PDF
+monitor_thread = None
+stop_event = threading.Event()  # Evento compartilhado para parar o monitoramento
+
+def start_monitoring():
+    global monitor_thread
+    if monitor_thread and monitor_thread.is_alive():
+        return  # Se o monitor já estiver ativo, não cria outro
+    monitor_thread = threading.Thread(target=pdf_monitor.monitor_directory, args=(stop_event,), daemon=True)
+    monitor_thread.start()
+
+# Função para parar o monitoramento quando a interface for fechada
+def on_close():
+    stop_event.set()  # Notifica o monitoramento para parar
+    if monitor_thread and monitor_thread.is_alive():
+        monitor_thread.join()  # Aguarda o término da thread
+    app.quit()  # Fecha a aplicação
+
+
+#CTE E XML EM GERAL
 def Manifestar_by_xml():
     placa = placa_cte_text.get()
     dt = dt_text.get()
@@ -32,7 +56,6 @@ def Manifestar_by_xml_parte_3():
     placa = placa_cte_text.get()
     dt = dt_text.get()
     ProcessadorXML3.processar_arquivo_3(placa, dt)
-
 
 
 
@@ -124,7 +147,10 @@ ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
 
 app = ctk.CTk()
-app.title("Me de sua banana")
+app.title("Auto preenchimento")
+
+stop_event = threading.Event()
+app.protocol("WM_DELETE_WINDOW", on_close)
 
 app.wm_attributes("-topmost", 1)
 screen_width = app.winfo_screenwidth()
@@ -135,7 +161,7 @@ y_percent = 0.55  # 65% da altura da tela
 
 x = int(screen_width * x_percent)
 y = int(screen_height * y_percent)
-app.geometry(f"300x300+{x}+{y}")  # Tamanho ajustado
+app.geometry(f"300x340+{x}+{y}")  # Tamanho ajustado
 
 # Impedindo redimensionamento da janela
 #app.resizable(False, False)
@@ -241,7 +267,44 @@ def formatar_data(event):
 # Função para obter o valor bruto
 def obter_data_bemisa_bruto():
     return data_bemisa_bruto
-        
+
+pygame.mixer.init()
+ano_confirmado = False
+def limpar_ano_confirmado():
+    global ano_confirmado
+    ano_confirmado = False  # Limpa a confirmação após o tempo determinado
+
+def verificar_ano(event):
+    global ano_confirmado  # Acessa a variável global
+
+    entrada = data_bemisa_text.get()
+    entrada_limpa = "".join(filter(str.isdigit, entrada))
+
+    # Verifica se o ano foi digitado completamente
+    if len(entrada_limpa) >= 8:
+        ano = entrada_limpa[4:8]  # Extrai o ano (4ª a 8ª posições)
+
+        if ano != "2025" and not ano_confirmado:
+            # Reproduz o som de alerta
+            pygame.mixer.music.load("audio_ano_errado.mp3")  # Certifique-se de que o arquivo MP3 está no mesmo diretório
+            pygame.mixer.music.play()
+
+            # Solicita confirmação ao usuário
+            resposta = messagebox.askyesno(
+                "Confirmação",
+                f"O ano informado é {ano}, o ano atual é 2025. Deseja continuar assim mesmo?"
+            )
+
+            if resposta:
+                
+                ano_confirmado = True
+
+                app.after(30000, limpar_ano_confirmado)
+            else:
+                
+                data_bemisa_text.delete(0, tk.END)
+                messagebox.showinfo("Operação cancelada", "Por favor, insira um ano válido.")
+
 def format_date_time(event):
     current_text = data_bemisa_text.get()
     if len(current_text) == 12:
@@ -266,10 +329,6 @@ placa_cte_text.bind("<KeyRelease>", verificar_entrada)
 dt_text = ctk.CTkEntry(tab1, placeholder_text="Dt usiminas", font=('Arial', 14))
 dt_text.grid(column=0, row=1, sticky="NW", pady=7, padx=5)
 
-nfe_info_var = tk.StringVar(value="")
-nfe_info = ctk.CTkEntry(tab1, textvariable=nfe_info_var, state="readonly", font=('Arial', 11))
-nfe_info.grid(column=0, row=4, columnspan=2, sticky="NWES", pady=0, padx=5)
-
 button_tab1 = ctk.CTkButton(tab1, text="CT-E Completo",font=('Arial', 14), command=Manifestar_by_xml)
 button_tab1.grid(column=0, row=2, columnspan=2, sticky="NWES", pady=0, padx=5)
 
@@ -278,6 +337,23 @@ button_tab1_2.grid(column=0, row=3, sticky="NWES", pady=10, padx=5)
 
 button_tab1_3 = ctk.CTkButton(tab1, text="Comp. Carga",font=('Arial', 14), command=Manifestar_by_xml_parte_2)
 button_tab1_3.grid(column=1, row=3, sticky="NWES", pady=10, padx=5)
+
+nfe_info_var = tk.StringVar(value="")
+nfe_info = ctk.CTkEntry(tab1, textvariable=nfe_info_var, state="readonly", font=('Arial', 11))
+nfe_info.grid(column=0, row=4, columnspan=2, sticky="NWES", pady=0, padx=5)
+
+# label_tempo = ctk.CTkLabel(tab1, text="Controle de Velocidade (segundos):")
+# label_tempo.grid(column=0, row=5, columnspan=2, sticky="NWES", pady=0, padx=5)
+
+# slider_tempo = ctk.CTkSlider(
+#     tab1, from_=0.5, to=10, variable=tempo, command=lambda v: campo_valor.configure(state="normal") or campo_valor.delete(0, "end") or campo_valor.insert(0, f"{float(v):.1f}") or campo_valor.configure(state="readonly")
+# )
+# slider_tempo.grid(column=0, row=6, columnspan=2, sticky="W", pady=0, padx=5)
+
+# Campo de leitura para exibir o valor do slider
+# campo_valor = ctk.CTkEntry(tab1, width=50, state="readonly")
+# campo_valor.grid(column=0, row=6, columnspan=2, sticky="E", pady=0, padx=5)
+# campo_valor.insert(0, f"{tempo.get():.1f}")  # Inicializa o valor no campo de leitura
 
 image = ctk.CTkImage(Image.open("clean_icon.png"), size=(20, 20))
 clean_button = ctk.CTkButton(tab1,text="",width=0,image=image, command=lambda: limpar_campo_especifico(placa_cte_text,dt_text))
@@ -301,6 +377,7 @@ peso_bemisa_text.grid(column=1, row=1, sticky="NW", pady=7, padx=5)
 data_bemisa_text = ctk.CTkEntry(tab2, placeholder_text="Data emissão ", font=('Arial', 13))
 data_bemisa_text.grid(column=0, row=3, sticky="NW", pady=7, padx=5)
 data_bemisa_text.bind("<KeyRelease>", formatar_data)
+data_bemisa_text.bind("<FocusOut>", verificar_ano)
 
 button_tab1 = ctk.CTkButton(tab2, text="OST Completo",font=('Arial', 14), command=executar_ost_bemisa)
 button_tab1.grid(column=1, row=3, sticky="NW", pady=7, padx=5)

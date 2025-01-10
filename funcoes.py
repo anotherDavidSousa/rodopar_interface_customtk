@@ -5,18 +5,23 @@ import time
 import pyttsx3
 import ctypes
 import json
-# from xml_process.cte_xml import DadosXML
+
+
 
 #DELETAR ARQUIVOS PDF E XML DA PASTA DE DOWNLOAD
 def deletar_xml_na_pasta():
-    downloads_path = os.path.join(os.getenv('USERPROFILE'), 'Downloads')
-    pasta_especifica = downloads_path
+    user_profile = os.getenv('USERPROFILE')
+    if user_profile and "david" in user_profile.lower():
+        pasta_especifica = r"D:\Downloads"
+    else:
+        downloads_path = os.path.join(user_profile, 'Downloads')
+        pasta_especifica = downloads_path
 
     for arquivo in os.listdir(pasta_especifica):
-        if arquivo.endswith(".xml") or arquivo.endswith(".pdf"): 
-            caminho_arquivo = os.path.join(pasta_especifica, arquivo) 
+        if arquivo.endswith(".xml") or (arquivo.endswith(".pdf") and "CONTRATO" in arquivo.upper()):
+            caminho_arquivo = os.path.join(pasta_especifica, arquivo)
             os.remove(caminho_arquivo)
-            print(f"Arquivo {arquivo} removido com sucesso.")  
+            print(f"Arquivo {arquivo} removido com sucesso.")
 
 def verifica_caps_lock():
     return ctypes.windll.user32.GetKeyState(0x14) & 1

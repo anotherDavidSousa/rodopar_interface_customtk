@@ -5,9 +5,8 @@ import imagens.rotulos as rotulos
 from funcoes import RepetidorTeclas, wait_and_click, verifica_caps_lock, desativar_caps_lock
 from xml_process.XML import DadosXML, solicitar_caminho_xml
 import json
-
+tempo = 0.3
 repetidor = RepetidorTeclas()
-tempo = 0.2
 
 with open('produtos.json', 'r') as arquivo:
     produtos = json.load(arquivo)
@@ -49,10 +48,10 @@ class ProcessadorXML2:
             else:
                 print("Caps Lock não está ativado.")
 
-            time.sleep(2)
+            time.sleep(3)
             wait_and_click(rotulos.imagens_insere,deslocamento_x=0)
             time.sleep(tempo)
-            repetidor.pressionar_tecla('enter',1, 0.3)
+            repetidor.pressionar_tecla('enter',1, 2)
             #numero de série da nota
             wait_and_click(rotulos.imagens_serienf,deslocamento_x=50)
             time.sleep(tempo)
@@ -84,31 +83,31 @@ class ProcessadorXML2:
             repetidor.pressionar_tecla('tab', 2, 0.3)
             if dados.cnpj_emit == '17903693000125' and dados.cnpj_dest == '08720614000907' or dados.cnpj_emit == '35452938000208' and dados.cnpj_dest == '14427957000123' or dados.cnpj_emit == '17903693000125' and dados.cnpj_dest == '08720614000664' or dados.cnpj_emit == '31732059000106' and dados.cnpj_dest == '31096483000284' or dados.cnpj_emit =='22034458000366' and dados.cnpj_dest =='33390170001312':
                 #repetidor.pressionar_tecla('tab', 1, 0.3)
-                time.sleep(1)
+                time.sleep(tempo)
                 pyautogui.write(dados.pesoqCom)
-                time.sleep(1)
-                repetidor.pressionar_tecla('tab', 1, 0.3)
-                time.sleep(1)
-                pyautogui.write(dados.pesoqCom)
-                time.sleep(1)
-            elif dados.cnpj_emit == '27748484000108' and dados.cnpj_dest =='31096483000284':
-                #repetidor.pressionar_tecla('tab', 1, 0.3)
-                time.sleep(1)
-                pyautogui.write(dados.atlas_prod)
-                time.sleep(1)
-                repetidor.pressionar_tecla('tab', 1, 0.3)
-                time.sleep(1)
-                pyautogui.write(dados.atlas_prod)
-                time.sleep(1)
-            else:
-                time.sleep(1)
-                pyautogui.write(dados.pesoL)
-                time.sleep(1)
                 time.sleep(tempo)
                 repetidor.pressionar_tecla('tab', 1, 0.3)
-                time.sleep(1)
+                time.sleep(tempo)
+                pyautogui.write(dados.pesoqCom)
+                time.sleep(tempo)
+            elif dados.cnpj_emit == '27748484000108' and dados.cnpj_dest =='31096483000284':
+                #repetidor.pressionar_tecla('tab', 1, 0.3)
+                time.sleep(tempo)
+                pyautogui.write(dados.atlas_prod)
+                time.sleep(tempo)
+                repetidor.pressionar_tecla('tab', 1, 0.3)
+                time.sleep(tempo)
+                pyautogui.write(dados.atlas_prod)
+                time.sleep(tempo)
+            else:
+                time.sleep(tempo)
                 pyautogui.write(dados.pesoL)
-                time.sleep(1)
+                time.sleep(tempo)
+                time.sleep(tempo)
+                repetidor.pressionar_tecla('tab', 1, 0.3)
+                time.sleep(tempo)
+                pyautogui.write(dados.pesoL)
+                time.sleep(tempo)
             repetidor.pressionar_tecla('tab', 1, 0.3)
             repetidor.pressionar_tecla('enter', 1, 0.3)
             wait_and_click(rotulos.imagens_valor,deslocamento_x=50)
