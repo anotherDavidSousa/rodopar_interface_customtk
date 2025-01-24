@@ -5,6 +5,7 @@ import imagens.rotulos as rotulos
 from funcoes import RepetidorTeclas, wait_and_click, verifica_caps_lock, desativar_caps_lock
 from xml_process.XML import DadosXML, solicitar_caminho_xml
 import json
+
 tempo = 0.3
 repetidor = RepetidorTeclas()
 

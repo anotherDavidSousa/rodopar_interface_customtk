@@ -51,9 +51,10 @@ class ProcessadorXML2:
             time.sleep(3)
             wait_and_click(rotulos.imagens_insere,deslocamento_x=0)
             time.sleep(tempo)
-            repetidor.pressionar_tecla('enter',1, 2)
+            repetidor.pressionar_tecla('enter',0, 2)
             #numero de série da nota
             wait_and_click(rotulos.imagens_serienf,deslocamento_x=50)
+            time.sleep(tempo)
             time.sleep(tempo)
             pyautogui.write(dados.serie_nf)
             time.sleep(tempo)

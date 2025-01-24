@@ -25,7 +25,7 @@ def start_monitoring():
         return  # Se o monitor já estiver ativo, não cria outro
     monitor_thread = threading.Thread(target=pdf_monitor.monitor_directory, args=(stop_event,), daemon=True)
     monitor_thread.start()
-
+start_monitoring()
 # Função para parar o monitoramento quando a interface for fechada
 def on_close():
     stop_event.set()  # Notifica o monitoramento para parar
