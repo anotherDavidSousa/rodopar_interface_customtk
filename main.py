@@ -6,14 +6,23 @@ import customtkinter as ctk
 import tkinter as tk
 from tkinter import messagebox
 import pdf_monitor
-from funcoes import deletar_xml_na_pasta
+from utils import deletar_xml_na_pasta, falar
 from ost_dadosfixos.ost_bemisa import ost_bemisa
 from ost_dadosfixos.ost_bemisa_geral import ost_bemisa_geral
 from ost_dadosfixos.ost_bemisa_carga import ost_bemisa_carga
 from xml_process.cte_xml import ProcessadorXML
 from xml_process.cte_xml_carga import ProcessadorXML2
 from xml_process.cte_xml_geral import ProcessadorXML3
+from version_checker import VersionChecker
 
+# Configurações de versão e URLs
+current_version = "v0.1.0-alpha"
+repo_url = "https://api.github.com/repos/anotherDavidSousa/rodopar_interface_customtk/releases/latest"
+download_url = "https://github.com/anotherDavidSousa/rodopar_interface_customtk/releases/latest"
+
+# Verificação de versão
+checker = VersionChecker(current_version, repo_url, download_url)
+checker.run()
 
 #EVENTOS DE MONITORAMENTE DE .PDF
 monitor_thread = None
@@ -38,9 +47,10 @@ def on_close():
 def Manifestar_by_xml():
     placa = placa_cte_text.get()
     dt = dt_text.get()
+    tempo_selecionado = tempo.get()
 
     # Chama o método e captura a mensagem final
-    mensagem_final = ProcessadorXML.processar_arquivo(placa, dt)
+    mensagem_final = ProcessadorXML.processar_arquivo(placa, dt,tempo_selecionado)
 
     if mensagem_final:
         # Atualiza o campo de texto somente leitura com a mensagem final
@@ -50,12 +60,14 @@ def Manifestar_by_xml():
         nfe_info_var.set("")  # Limpa o campo caso necessário
 
 def Manifestar_by_xml_parte_2():
-    ProcessadorXML2.processar_arquivo_2()
+    tempo_selecionado = tempo.get()
+    ProcessadorXML2.processar_arquivo_2(tempo_selecionado)
 
 def Manifestar_by_xml_parte_3():
     placa = placa_cte_text.get()
     dt = dt_text.get()
-    ProcessadorXML3.processar_arquivo_3(placa, dt)
+    tempo_selecionado = tempo.get()
+    ProcessadorXML3.processar_arquivo_3(placa, dt,tempo_selecionado)
 
 
 
@@ -212,6 +224,8 @@ app.config(menu=menu_bar)
 tabview = ctk.CTkTabview(app)
 tabview.pack(expand=True, fill="both", padx=10, pady=10)
 
+tempo = ctk.DoubleVar(value=0.5)  # Valor inicial do slider (meio segundo)
+
 # Adicionando abas
 tab1 = tabview.add("Nota Fiscal")
 tab2 = tabview.add("OST Bemisa")
@@ -286,8 +300,7 @@ def verificar_ano(event):
 
         if ano != "2025" and not ano_confirmado:
             # Reproduz o som de alerta
-            pygame.mixer.music.load("audio_ano_errado.mp3")  # Certifique-se de que o arquivo MP3 está no mesmo diretório
-            pygame.mixer.music.play()
+            falar("O ano informado é {ano}, o ano atual é 2025. Deseja continuar assim mesmo?")
 
             # Solicita confirmação ao usuário
             resposta = messagebox.askyesno(
@@ -342,20 +355,33 @@ nfe_info_var = tk.StringVar(value="")
 nfe_info = ctk.CTkEntry(tab1, textvariable=nfe_info_var, state="readonly", font=('Arial', 11))
 nfe_info.grid(column=0, row=4, columnspan=2, sticky="NWES", pady=0, padx=5)
 
-# label_tempo = ctk.CTkLabel(tab1, text="Controle de Velocidade (segundos):")
-# label_tempo.grid(column=0, row=5, columnspan=2, sticky="NWES", pady=0, padx=5)
+# Controle de Velocidade (tab1)
+label_tempo = ctk.CTkLabel(tab1, text="Controle de Velocidade (segundos):")
+label_tempo.grid(column=0, row=5, columnspan=2, sticky="NWES", pady=0, padx=5)
 
-# slider_tempo = ctk.CTkSlider(
-#     tab1, from_=0.5, to=10, variable=tempo, command=lambda v: campo_valor.configure(state="normal") or campo_valor.delete(0, "end") or campo_valor.insert(0, f"{float(v):.1f}") or campo_valor.configure(state="readonly")
-# )
-# slider_tempo.grid(column=0, row=6, columnspan=2, sticky="W", pady=0, padx=5)
+# Função para atualizar o campo de valor
+def atualizar_valor_slider(valor):
+    campo_valor.configure(state="normal")
+    campo_valor.delete(0, "end")
+    campo_valor.insert(0, f"{float(valor):.1f}")
+    campo_valor.configure(state="readonly")
 
-# Campo de leitura para exibir o valor do slider
-# campo_valor = ctk.CTkEntry(tab1, width=50, state="readonly")
-# campo_valor.grid(column=0, row=6, columnspan=2, sticky="E", pady=0, padx=5)
-# campo_valor.insert(0, f"{tempo.get():.1f}")  # Inicializa o valor no campo de leitura
+# Slider
+slider_tempo = ctk.CTkSlider(
+    tab1, 
+    from_=0.5, 
+    to=10, 
+    variable=tempo,
+    command=atualizar_valor_slider
+)
+slider_tempo.grid(column=0, row=6, columnspan=2, sticky="WE", pady=0, padx=5)
 
-image = ctk.CTkImage(Image.open("clean_icon.png"), size=(20, 20))
+# Campo de valor
+campo_valor = ctk.CTkEntry(tab1, width=50, state="readonly")
+campo_valor.grid(column=0, row=6, columnspan=2, sticky="E", pady=0, padx=5)
+campo_valor.insert(0, f"{tempo.get():.1f}")  # Valor inicial
+
+image = ctk.CTkImage(Image.open("media/image/clean_icon.png"), size=(20, 20))
 clean_button = ctk.CTkButton(tab1,text="",width=0,image=image, command=lambda: limpar_campo_especifico(placa_cte_text,dt_text))
 clean_button.grid(column=1, row=0,sticky="NE", pady=5, padx=0)
 
@@ -392,7 +418,7 @@ mensagemost = tk.StringVar(value="")
 mensagemost_info = ctk.CTkEntry(tab2, textvariable=mensagemost, state="readonly", font=('Arial', 14))
 mensagemost_info.grid(column=0, row=5,columnspan=2, sticky="NWES", pady=0, padx=5)
 
-image = ctk.CTkImage(Image.open("clean_icon.png"), size=(20, 20))
+image = ctk.CTkImage(Image.open("media/image/clean_icon.png"), size=(20, 20))
 clean_button = ctk.CTkButton(tab2,text="",width=0,image=image, command=lambda: limpar_campo_especifico(placa_bemisa_text,ticket_bemisa_text,peso_bemisa_text,data_bemisa_text))
 clean_button.grid(column=1, row=0,sticky="NE", pady=5, padx=0)
 

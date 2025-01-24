@@ -50,7 +50,7 @@ def process_pdf(file_path):
         # Gera hash do arquivo para evitar reprocessamento
         file_hash = gerar_hash_arquivo(file_path)
         if file_hash in processed_hashes:
-            print(f"Arquivo já processado: {file_path}")
+            # print(f"Arquivo já processado: {file_path}")
             return
         processed_hashes.add(file_hash)
 

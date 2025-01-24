@@ -2,19 +2,18 @@ from tkinter import messagebox
 import time
 import pyautogui
 import imagens.rotulos as rotulos
-from funcoes import RepetidorTeclas, wait_and_click, verifica_caps_lock, desativar_caps_lock
+from utils import RepetidorTeclas, wait_and_click, verifica_caps_lock, desativar_caps_lock
 from xml_process.XML import DadosXML, solicitar_caminho_xml
 import json
 
-tempo = 0.3
 repetidor = RepetidorTeclas()
 
-with open('produtos.json', 'r') as arquivo:
+with open('configs/produtos.json', 'r') as arquivo:
     produtos = json.load(arquivo)
 
 class ProcessadorXML:
     @staticmethod
-    def processar_arquivo(placa, dt):
+    def processar_arquivo(placa, dt, tempo):
         try:
             # Solicitar o arquivo XML
             caminho_arquivo = solicitar_caminho_xml()
@@ -26,7 +25,7 @@ class ProcessadorXML:
             # Criar uma instância de DadosXML e processar o arquivo
             dados = DadosXML()
             dados.extrair_informacao(caminho_arquivo)
-            caminho_json = r"mensagem_rotas.json"
+            caminho_json = r"configs/mensagem_rotas.json"
             
             with open(caminho_json, 'r', encoding='utf-8') as arquivo_json:
                 dicionario_cnpjs = json.load(arquivo_json)

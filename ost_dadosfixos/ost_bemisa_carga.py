@@ -5,7 +5,7 @@ import time
 import pyautogui
 from tkinter import messagebox
 import imagens.rotulos as rotulos
-from funcoes import RepetidorTeclas, wait_and_click, verifica_caps_lock, desativar_caps_lock
+from utils import RepetidorTeclas, wait_and_click, verifica_caps_lock, desativar_caps_lock
 
 repetidor = RepetidorTeclas()
 tempo = 0.2
