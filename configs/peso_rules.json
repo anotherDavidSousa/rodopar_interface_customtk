@@ -3,41 +3,41 @@
         {
             "cnpj_emit": "17903693000125",
             "cnpj_dest": "08720614000907",
-            "campo": "pesoqCom"
+            "campo_peso": "pesoqCom"
         },
         {
             "cnpj_emit": "35452938000208",
             "cnpj_dest": "14427957000123",
-            "campo": "pesoqCom"
+            "campo_peso": "pesoqCom"
         },
         {
             "cnpj_emit": "17903693000125",
             "cnpj_dest": "08720614000664",
-            "campo": "pesoqCom"
+            "campo_peso": "pesoqCom"
         },
         {
             "cnpj_emit": "31732059000106",
             "cnpj_dest": "31096483000284",
-            "campo": "pesoqCom"
+            "campo_peso": "pesoqCom"
         },
         {
             "cnpj_emit": "22034458000366",
             "cnpj_dest": "33390170001312",
-            "campo": "pesoqCom"
+            "campo_peso": "pesoqCom"
         },
         {
             "cnpj_emit": "27748484000108",
             "cnpj_dest": "31096483000284",
-            "campo": "pesoqCom",
+            "campo_peso": "pesoqCom",
             "Rota": "ATLAS x MIG"
         },
         {
             "cnpj_emit": "27748484000108",
             "cnpj_dest": "31096483000284",
-            "campo": "atlas_prod"
+            "campo_peso": "atlas_prod"
         }
     ],
     "padrao": {
-        "campo": "pesoL"
+        "campo_peso": "pesoL"
     }
 }

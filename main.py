@@ -1,6 +1,5 @@
 import os
 import threading
-import pygame
 from PIL import Image
 import customtkinter as ctk
 import tkinter as tk
