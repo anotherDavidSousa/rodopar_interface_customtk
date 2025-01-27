@@ -5,10 +5,13 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 import winsound
 
-
-def tocar_alarme(frequencia, duracao):
-    """Toca um alarme sonoro."""
-    winsound.Beep(frequencia, duracao)
+beep_wav = "media/audio/beep.wav"
+def tocar_alarme_wav(beep_wav):
+    """Toca um alarme sonoro usando um arquivo .wav."""
+    try:
+        winsound.PlaySound(beep_wav, winsound.SND_FILENAME | winsound.SND_ASYNC)
+    except RuntimeError as e:
+        print(f"Erro ao reproduzir som: {e}")
 
 
 def mostrar_avisos(msg):
@@ -16,7 +19,6 @@ def mostrar_avisos(msg):
     root = tk.Tk()
     root.withdraw()  # Esconde a janela principal
     messagebox.showwarning("Aviso de Dados Incorretos", msg)
-    root.deiconify()
 
 
 def extrair_valor_elemento(root, caminho_xpath):
@@ -52,6 +54,7 @@ class DadosXML:
     def __init__(self):
         self.chNFe = None
         self.dhRecbto = None
+        self.natOp = None
         self.pesoL = None
         self.vLiq = None
         self.vProd = None
@@ -75,15 +78,26 @@ class DadosXML:
         if self.dhRecbto and (len(self.dhRecbto) != 12 or not self.dhRecbto.isdigit()):
             mensagem = "A data/hora no XML está incorreta ou possui caracteres inválidos!"
             print("AVISO:", mensagem)
-            tocar_alarme(1000, 1000)  # Alarme mais longo
+            tocar_alarme_wav(beep_wav)  # Alarme mais longo
             mostrar_avisos(mensagem)
 
     def validar_peso(self, peso, nome_campo):
         if peso and len(peso) < 5:
-            mensagem = f"O peso '{nome_campo}' está fora do normal e pode conter erro de digitação!"
+            mensagem = (f"O campo '{nome_campo}' está fora do normal e pode conter erro de digitação! \n"
+                        f"O valor apresentado é: {self.pesoL} \n"
+                        "VERIFICAR SE PREENCHERA O VALOR DO PESO CORRETAMENTE NO RODOPAR")
             print("AVISO:", mensagem)
-            tocar_alarme(800, 1000)  # Alarme mais longo
+            tocar_alarme_wav(beep_wav)  # Toca um arquivo de alerta específico
             mostrar_avisos(mensagem)
+
+    def validar_natureza_operacao(self, natOp, produto):
+        if natOp =='REMESSA P/ FORMACAO DE LOTE FERROVIARIO' and produto == 'MINERIO DE FERRO SINTER FEED M05' or produto == 'MINERIO DE FERRO SINTER FEED M05':
+            mensagem = (f"Essa Nota tem 99% de ser uma nota de troca que não deve ser manifestada, por favor confira a nota antes de continuar")
+            print("AVISO:", mensagem)
+            tocar_alarme_wav(beep_wav)  # Toca um arquivo de alerta específico
+            mostrar_avisos(mensagem)
+
+
 
     def extrair_informacao(self, caminho_arquivo):
         tree = ET.parse(caminho_arquivo)
@@ -133,6 +147,7 @@ class DadosXML:
 
         self.fertran = extrair_valor_elemento(root, './/{http://www.portalfiscal.inf.br/nfe}transporta/{http://www.portalfiscal.inf.br/nfe}xNome')
         self.nNF = extrair_valor_elemento(root, './/{http://www.portalfiscal.inf.br/nfe}ide/{http://www.portalfiscal.inf.br/nfe}nNF')
+        self.natOp = extrair_valor_elemento(root, './/{http://www.portalfiscal.inf.br/nfe}ide/{http://www.portalfiscal.inf.br/nfe}natOp')
         self.serie_nf = extrair_valor_elemento(root, './/{http://www.portalfiscal.inf.br/nfe}ide/{http://www.portalfiscal.inf.br/nfe}serie')
         self.cnpj_emit = extrair_valor_elemento(root, './/{http://www.portalfiscal.inf.br/nfe}emit/{http://www.portalfiscal.inf.br/nfe}CNPJ')
         self.cnpj_dest = extrair_valor_elemento(root, './/{http://www.portalfiscal.inf.br/nfe}dest/{http://www.portalfiscal.inf.br/nfe}CNPJ')
@@ -145,6 +160,7 @@ class DadosXML:
         self.produto = extrair_valor_elemento(root, './/{http://www.portalfiscal.inf.br/nfe}det/{http://www.portalfiscal.inf.br/nfe}prod/{http://www.portalfiscal.inf.br/nfe}xProd')
         self.tomador_frete = extrair_valor_elemento(root, './/{http://www.portalfiscal.inf.br/nfe}transp/{http://www.portalfiscal.inf.br/nfe}modFrete')
 
+        self.validar_natureza_operacao(self.natOp, self.produto)
 
         print("Cahve",self.chNFe)
         print("data",self.dhRecbto)
@@ -166,3 +182,4 @@ class DadosXML:
         print("nome do produto",self.produto)
         print("pagador do frete",self.tomador_frete)
         print("peso qCom",self.pesoqCom)
+        print("natureza", self.natOp)

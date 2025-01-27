@@ -1,0 +1,27 @@
+{
+    "regras": [
+        {
+            "cnpj_emit": "08720614000664",
+            "cnpj_dest": "08720614000907",
+            "campo_valor": "vProd"
+        },
+        {
+            "cnpj_emit": "33390170001312",
+            "cnpj_dest": "08720614000664",
+            "campo_valor": "vProd"
+        },
+        {
+            "cnpj_emit": "22034458000366",
+            "cnpj_dest": "33390170001312",
+            "campo_valor": "vProd"
+        },
+        {
+            "cnpj_emit": "31096483000284",
+            "cnpj_dest": "15643555000471",
+            "campo_valor": "vProd"
+        }
+    ],
+    "padrao": {
+        "campo_valor": "vLiq"
+    }
+}

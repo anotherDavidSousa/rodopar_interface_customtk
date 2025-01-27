@@ -1,15 +1,13 @@
+import os
 from tkinter import messagebox
 import time
 import pyautogui
 import imagens.rotulos as rotulos
-from utils import RepetidorTeclas, wait_and_click, verifica_caps_lock, desativar_caps_lock
+from utils import RepetidorTeclas, wait_and_click, verifica_caps_lock, desativar_caps_lock, falar
 from xml_process.XML import DadosXML, solicitar_caminho_xml
 import json
 
 repetidor = RepetidorTeclas()
-
-with open('configs/produtos.json', 'r') as arquivo:
-    produtos = json.load(arquivo)
 
 class ProcessadorXML:
     @staticmethod
@@ -155,54 +153,79 @@ class ProcessadorXML:
             time.sleep(tempo)
             repetidor.pressionar_tecla('tab', 1, 0.3)
             #produtos aqui
+            caminho_json_produtos = os.path.join('config', 'produtos.json')  # → "config\produtos.json" no Windows
+
+            with open(caminho_json_produtos, 'r', encoding='utf-8') as arquivo:
+                produtos = json.load(arquivo)
+
             if dados.produto in produtos:
                 pyautogui.write(produtos[dados.produto])
                 time.sleep(tempo)
             else:
-                print("Produto não encontrado")
+                falar("produto não localizado")
             time.sleep(tempo)
             repetidor.pressionar_tecla('tab', 2, 0.3)
             pyautogui.write(dados.cfop_text)
             time.sleep(tempo)
             repetidor.pressionar_tecla('tab', 2, 0.3)
-            if dados.cnpj_emit == '17903693000125' and dados.cnpj_dest == '08720614000907' or dados.cnpj_emit == '35452938000208' and dados.cnpj_dest == '14427957000123' or dados.cnpj_emit == '17903693000125' and dados.cnpj_dest == '08720614000664' or dados.cnpj_emit == '31732059000106' and dados.cnpj_dest == '31096483000284' or dados.cnpj_emit =='22034458000366' and dados.cnpj_dest =='33390170001312':
-                time.sleep(tempo)
-                pyautogui.write(dados.pesoqCom)
-                time.sleep(tempo)
-                repetidor.pressionar_tecla('tab', 1, 0.3)
-                time.sleep(tempo)
-                pyautogui.write(dados.pesoqCom)
-                time.sleep(tempo)
-            elif dados.cnpj_emit == '27748484000108' and dados.cnpj_dest =='31096483000284':
-                time.sleep(tempo)
-                pyautogui.write(dados.atlas_prod)
-                time.sleep(tempo)
-                repetidor.pressionar_tecla('tab', 1, 0.3)
-                time.sleep(tempo)
-                pyautogui.write(dados.atlas_prod)
-                time.sleep(tempo)
-            else:
-                time.sleep(tempo)
-                pyautogui.write(dados.pesoL)
-                time.sleep(tempo)
-                repetidor.pressionar_tecla('tab', 1, 0.3)
-                time.sleep(tempo)
-                pyautogui.write(dados.pesoL)
-                time.sleep(tempo)
+
+            caminho_json_peso = os.path.join('config', 'peso_rules.json') 
+
+            with open(caminho_json_peso, 'r', encoding='utf-8') as f:
+                peso_rules = json.load(f)
+
+            campo_peso = None
+
+            for regra in peso_rules['regras']:
+                if dados.cnpj_emit == regra['cnpj_emit'] and dados.cnpj_dest == regra['cnpj_dest']:
+                    campo_peso = regra['campo_peso']
+                    break
+
+            if not campo_peso:
+                campo_peso = peso_rules['padrao']['campo_peso']
+
+            time.sleep(tempo)
+            pyautogui.write(getattr(dados, campo_peso))
+            time.sleep(tempo)
+            repetidor.pressionar_tecla('tab', 1, 0.3)
+            time.sleep(tempo)
+            pyautogui.write(getattr(dados, campo_peso))
+            time.sleep(tempo)
             repetidor.pressionar_tecla('tab', 1, 0.3)
             repetidor.pressionar_tecla('enter', 1, 0.3)
             wait_and_click(rotulos.imagens_valor,deslocamento_x=50)
             time.sleep(tempo)
-            if dados.cnpj_emit == '08720614000664' and dados.cnpj_dest == '08720614000907' or dados.cnpj_emit == '33390170001312' and dados.cnpj_dest =='08720614000664' or dados.cnpj_emit =='22034458000366' and dados.cnpj_dest =='33390170001312' or dados.cnpj_emit =='31096483000284' and dados.cnpj_dest == '15643555000471':
-                wait_and_click(rotulos.imagens_valor_mercadoria_ost_tcb,deslocamento_x=50)
-                time.sleep(tempo)
-                pyautogui.write(dados.vProd)
-                
-            else:
-                wait_and_click(rotulos.imagens_valor,deslocamento_x=50)
-                time.sleep(tempo)
-                pyautogui.write(dados.vLiq)
 
+            # Carrega o JSON (apenas uma vez)
+            caminho_json_valor = os.path.join('config', 'valor_nota.json')
+
+            with open(caminho_json_valor, 'r', encoding='utf-8') as g:
+                valor_nota = json.load(g)
+
+            # Determina o campo e se usou padrão
+            campo_valor = None
+            usou_padrao = False  # Adicione essa flag
+
+            for regra in valor_nota['regras']:
+                if dados.cnpj_emit == regra['cnpj_emit'] and dados.cnpj_dest == regra['cnpj_dest']:
+                    campo_valor = regra['campo_valor']
+                    usou_padrao = False  # Veio de regra específica
+                    break
+
+            if not campo_valor:
+                campo_valor = valor_nota['padrao']['campo_valor']
+                usou_padrao = True  # Marca como padrão
+
+            # Escolhe a imagem correta
+            if usou_padrao:
+                wait_and_click(rotulos.imagens_valor, deslocamento_x=50)
+            else:
+                wait_and_click(rotulos.imagens_valor_mercadoria_ost_tcb, deslocamento_x=50)
+
+            # Comando comum para ambos os casos
+            time.sleep(tempo)
+            pyautogui.write(getattr(dados, campo_valor))
+                
             repetidor.pressionar_tecla('tab', 1, 0.3)
             messagebox.showinfo("Info","Finalizado! \n dados fornecidos foram preenchidos, por favor continue manualmente.")
         else:

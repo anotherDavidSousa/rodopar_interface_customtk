@@ -281,7 +281,6 @@ def formatar_data(event):
 def obter_data_bemisa_bruto():
     return data_bemisa_bruto
 
-pygame.mixer.init()
 ano_confirmado = False
 def limpar_ano_confirmado():
     global ano_confirmado
