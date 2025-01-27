@@ -1,17 +1,36 @@
-# Ignorar caches do Python
+# Evitar arquivos de ambiente virtual
+env/
+venv/
+
+# Cache do Python
 __pycache__/
 *.py[cod]
+*.pyo
 
-# Ignorar logs e dumps de depuração
+# Configurações específicas do sistema operacional
+.DS_Store
+Thumbs.db
+
+# Arquivos de log
 *.log
-*.sqlite3
 
-# Ignorar configurações do ambiente virtual
-venv/
-.env
-
-# Ignorar configurações de IDEs comuns
-.idea/
+# Arquivos do editor/IDE
 .vscode/
-downloads/
-.downloads/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Arquivos de build
+build/
+dist/
+*.egg-info/
+
+# Arquivos temporários ou desnecessários
+*.tmp
+*.bak
+*.swp
+*.~*
+
+# Configurações de ambiente
+.env
+.env.local
