@@ -23,7 +23,8 @@ class ProcessadorXML:
             # Criar uma instância de DadosXML e processar o arquivo
             dados = DadosXML()
             dados.extrair_informacao(caminho_arquivo)
-            caminho_json = r"configs/mensagem_rotas.json"
+
+            caminho_json = r"config/mensagem_rotas.json"
             
             with open(caminho_json, 'r', encoding='utf-8') as arquivo_json:
                 dicionario_cnpjs = json.load(arquivo_json)
@@ -31,7 +32,7 @@ class ProcessadorXML:
             data_formatada = f"{dataemissao[:2]}/{dataemissao[2:4]}"
             chave_cnpjs = f"{dados.cnpj_emit}-{dados.cnpj_dest}"
 
-            mensagem_resultado = dicionario_cnpjs.get(chave_cnpjs, "Chave não encontrada no dicionário.")
+            mensagem_resultado = dicionario_cnpjs.get(chave_cnpjs, "Rota não encontrada.")
             mensagem_final = f"{mensagem_resultado} - Data: {data_formatada} - NF: {dados.nNF}"
         except Exception as e:
             messagebox.showerror("Erro", f"Ocorreu um erro: {str(e)}")
@@ -53,18 +54,37 @@ class ProcessadorXML:
             else:
                 print("Caps Lock não está ativado.")
 
-            if  dados.cnpj_emit == '33390170001312' and dados.cnpj_dest =='08720614000664' or dados.cnpj_emit =='22034458000366' and dados.cnpj_dest =='33390170001312':
-                time.sleep(2)
-                wait_and_click(rotulos.imagens_faturamento, deslocamento_x=0)
-                time.sleep(0.5)
-                repetidor.pressionar_tecla('down',2)
+            path_json_faturamento = os.path.join('config', 'tipo_faturamento.json')
+
+            try:
+                with open(path_json_faturamento, 'r', encoding='utf-8') as arquivo:
+                    tipo_faturamento = json.load(arquivo)
+            
+            except FileNotFoundError:
+                falar("Arquivo de faturamento não encontrado")
+                # Adicione aqui tratamento de erro ou retorne
+            except json.JSONDecodeError:
+                falar("Erro no formato do JSON de faturamento")
+                # Trate erro de formatação
+            def obter_tipo_faturamento(cnpj_emit, cnpj_dest):
+                """Verifica o tipo de serviço com base no JSON."""
+                for caso in tipo_faturamento["ordem_de_servico"]:
+                    if cnpj_emit == caso["cnpj_emit"] and cnpj_dest == caso["cnpj_dest"]:
+                        return "ordem_de_servico"
+                return "conhecimento_de_transporte"
+
+            tipo_servico = obter_tipo_faturamento(dados["cnpj_emit"], dados["cnpj_dest"])
+
+            time.sleep(2)
+            wait_and_click(rotulos.imagens_faturamento, deslocamento_x=0)
+            time.sleep(0.5)
+
+            if tipo_servico == "ordem_de_servico":
+                repetidor.pressionar_tecla('down', 2)
                 pyautogui.press('right')
                 repetidor.pressionar_tecla('enter', 1, 2.5)
-            else:
-                time.sleep(2)
-                wait_and_click(rotulos.imagens_faturamento, deslocamento_x=0)
-                time.sleep(0.5)
-                repetidor.pressionar_tecla('down',2)
+            else:  
+                repetidor.pressionar_tecla('down', 2)
                 pyautogui.press('right')
                 repetidor.pressionar_tecla('down', 1, 0.2)
                 repetidor.pressionar_tecla('enter', 1, 2.5)
@@ -153,16 +173,28 @@ class ProcessadorXML:
             time.sleep(tempo)
             repetidor.pressionar_tecla('tab', 1, 0.3)
             #produtos aqui
-            caminho_json_produtos = os.path.join('config', 'produtos.json')  # → "config\produtos.json" no Windows
+            caminho_json_produtos = os.path.join('config', 'produtos.json')
 
-            with open(caminho_json_produtos, 'r', encoding='utf-8') as arquivo:
-                produtos = json.load(arquivo)
+            try:
+                with open(caminho_json_produtos, 'r', encoding='utf-8') as arquivo:
+                    produtos = json.load(arquivo)
+                    
+            except FileNotFoundError:
+                falar("Arquivo de produtos não encontrado")
+                # Adicione aqui tratamento de erro ou retorne
+            except json.JSONDecodeError:
+                falar("Erro no formato do JSON de produtos")
+                # Trate erro de formatação
 
-            if dados.produto in produtos:
-                pyautogui.write(produtos[dados.produto])
-                time.sleep(tempo)
             else:
-                falar("produto não localizado")
+                # Só executa se o JSON foi carregado com sucesso
+                produto = getattr(dados, 'produto', None)  # Prevenção para atributo inexistente
+                
+                if produto and produto in produtos:
+                    pyautogui.write(produtos[produto])
+                    time.sleep(tempo)
+                else:
+                    falar(f"Produto '{produto}' não localizado" if produto else "Campo 'produto' vazio")
             time.sleep(tempo)
             repetidor.pressionar_tecla('tab', 2, 0.3)
             pyautogui.write(dados.cfop_text)

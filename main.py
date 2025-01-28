@@ -60,14 +60,29 @@ def Manifestar_by_xml():
 
 def Manifestar_by_xml_parte_2():
     tempo_selecionado = tempo.get()
-    ProcessadorXML2.processar_arquivo_2(tempo_selecionado)
+    # ProcessadorXML2.processar_arquivo_2(tempo_selecionado)
+    mensagem_final = ProcessadorXML2.processar_arquivo_2(tempo_selecionado)
+
+    if mensagem_final:
+        # Atualiza o campo de texto somente leitura com a mensagem final
+        nfe_info_var.set(mensagem_final)
+    else:
+        messagebox.showwarning("Aviso", "Nenhuma mensagem gerada ou ocorreu um erro.")
+        nfe_info_var.set("")  # Limpa o campo caso necessário
 
 def Manifestar_by_xml_parte_3():
     placa = placa_cte_text.get()
     dt = dt_text.get()
     tempo_selecionado = tempo.get()
-    ProcessadorXML3.processar_arquivo_3(placa, dt,tempo_selecionado)
+    # ProcessadorXML3.processar_arquivo_3(placa, dt,tempo_selecionado)
+    mensagem_final = ProcessadorXML3.processar_arquivo_3(placa, dt, tempo_selecionado)
 
+    if mensagem_final:
+        # Atualiza o campo de texto somente leitura com a mensagem final
+        nfe_info_var.set(mensagem_final)
+    else:
+        messagebox.showwarning("Aviso", "Nenhuma mensagem gerada ou ocorreu um erro.")
+        nfe_info_var.set("")  # Limpa o campo caso necessário
 
 
 #OST
@@ -223,7 +238,7 @@ app.config(menu=menu_bar)
 tabview = ctk.CTkTabview(app)
 tabview.pack(expand=True, fill="both", padx=10, pady=10)
 
-tempo = ctk.DoubleVar(value=0.5)  # Valor inicial do slider (meio segundo)
+tempo = ctk.DoubleVar(value=0.3)  # Valor inicial do slider (meio segundo)
 
 # Adicionando abas
 tab1 = tabview.add("Nota Fiscal")
@@ -334,11 +349,11 @@ def limpar_campo_especifico(*campos):
 
 #WIDGETS DA TAB1
 placa_cte_text = ctk.CTkEntry(tab1, placeholder_text="Placa do cavalo", font=('Arial', 14))
-placa_cte_text.grid(column=0, row=0, sticky="NW", pady=7, padx=5)
+placa_cte_text.grid(column=0, row=0, sticky="NWES", pady=7, padx=5)
 placa_cte_text.bind("<KeyRelease>", verificar_entrada)
 
 dt_text = ctk.CTkEntry(tab1, placeholder_text="Dt usiminas", font=('Arial', 14))
-dt_text.grid(column=0, row=1, sticky="NW", pady=7, padx=5)
+dt_text.grid(column=0, row=1, sticky="NWES", pady=7, padx=5)
 
 button_tab1 = ctk.CTkButton(tab1, text="CT-E Completo",font=('Arial', 14), command=Manifestar_by_xml)
 button_tab1.grid(column=0, row=2, columnspan=2, sticky="NWES", pady=0, padx=5)
@@ -367,16 +382,16 @@ def atualizar_valor_slider(valor):
 # Slider
 slider_tempo = ctk.CTkSlider(
     tab1, 
-    from_=0.5, 
-    to=10, 
+    from_=0.3, 
+    to=7, 
     variable=tempo,
     command=atualizar_valor_slider
 )
-slider_tempo.grid(column=0, row=6, columnspan=2, sticky="WE", pady=0, padx=5)
+slider_tempo.grid(column=0, row=6, columnspan=2, sticky="NWES", pady=10, padx=5)
 
 # Campo de valor
-campo_valor = ctk.CTkEntry(tab1, width=50, state="readonly")
-campo_valor.grid(column=0, row=6, columnspan=2, sticky="E", pady=0, padx=5)
+campo_valor = ctk.CTkEntry(tab1, width=35, state="readonly")
+campo_valor.grid(column=1, row=1, sticky="NE", pady=5, padx=0)
 campo_valor.insert(0, f"{tempo.get():.1f}")  # Valor inicial
 
 image = ctk.CTkImage(Image.open("media/image/clean_icon.png"), size=(20, 20))
