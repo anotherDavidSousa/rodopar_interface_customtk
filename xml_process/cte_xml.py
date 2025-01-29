@@ -72,8 +72,7 @@ class ProcessadorXML:
                     if cnpj_emit == caso["cnpj_emit"] and cnpj_dest == caso["cnpj_dest"]:
                         return "ordem_de_servico"
                 return "conhecimento_de_transporte"
-
-            tipo_servico = obter_tipo_faturamento(dados["cnpj_emit"], dados["cnpj_dest"])
+            tipo_servico = obter_tipo_faturamento(dados.cnpj_emit, dados.cnpj_dest)
 
             time.sleep(2)
             wait_and_click(rotulos.imagens_faturamento, deslocamento_x=0)
