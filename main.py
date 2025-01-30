@@ -122,6 +122,7 @@ def executar_ost_bemisa():
     peso = peso_bemisa_text.get().strip()
     emissao = data_bemisa_text.get().strip()
     data_limpa = emissao.replace("/", "").replace(" ", "").replace(":", "")
+    
     # Validações
     if not validar_ticket(ticket):
         return
@@ -134,11 +135,12 @@ def executar_ost_bemisa():
     except IndexError:
         data_formatada = "Data inválida"
 
-    # Atualiza o campo de informação com a data e ticket
-    mensagemost.set(f"Data: {data_formatada} - TICKET: {ticket}")
-
     # Chamada da função ost_bemisa com os dados validados
-    ost_bemisa(placa, ticket, peso, data_limpa)
+    escolha = ost_bemisa(placa, ticket, peso, data_limpa)
+
+    if escolha:
+        # Atualiza o campo de informação com a escolha, data e ticket
+        mensagemost.set(f"{escolha} - Data: {data_formatada} - TICKET: {ticket}")
 
 def ost_bemisa_parte_1():
     placa = placa_bemisa_text.get().strip()
@@ -150,6 +152,7 @@ def ost_bemisa_parte_2():
     peso = peso_bemisa_text.get().strip()
     emissao = data_bemisa_text.get().strip()
     data_limpa = emissao.replace("/", "").replace(" ", "").replace(":", "")
+    
     # Validações
     if not validar_ticket(ticket):
         return
@@ -162,11 +165,12 @@ def ost_bemisa_parte_2():
     except IndexError:
         data_formatada = "Data inválida"
 
-    # Atualiza o campo de informação com a data e ticket
-    mensagemost.set(f"Data: {data_formatada} - TICKET: {ticket}")
+    # Chamada da função ost_bemisa_carga com os dados validados
+    escolha = ost_bemisa_carga(ticket, peso, data_limpa)
 
-    # Chamada da função ost_bemisa com os dados validados
-    ost_bemisa_carga(ticket, peso, data_limpa)
+    if escolha:
+        # Atualiza o campo de informação com a escolha, data e ticket
+        mensagemost.set(f"{escolha} - Data: {data_formatada} - TICKET: {ticket}")
 
 #INICIALIZAÇÃO E CONFIGURAÇÕES DO CUSTOMTK
 ctk.set_appearance_mode("dark")

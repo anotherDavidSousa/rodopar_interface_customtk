@@ -34,15 +34,17 @@ def ost_bemisa(placa, ticket, peso, emissao):
             remetente_cnpj = '08720614000664'
             destinatario_cnpj = '15643555000390'
             falar('Manifestando para Timoteo TCB')
+            escolha_texto = "TCB"
         elif escolha == "2":
             # Dados para Terminal João Correio - Santana do Paraíso
             pagador_cnpj = '08720614000664'
             remetente_cnpj = '08720614000664'
             destinatario_cnpj = '15643555000471'
             falar('Manifestando para Terminal João Correia')
+            escolha_texto =  "TBJC"
         else:
             messagebox.showerror("Erro", "Opção inválida! Tarefa cancelada.")
-            return
+        
         # Verificar e ajustar Caps Lock
         if verifica_caps_lock():
             desativar_caps_lock()
@@ -116,6 +118,8 @@ def ost_bemisa(placa, ticket, peso, emissao):
         pyautogui.write('0,01')
         time.sleep(tempo)
         repetidor.pressionar_tecla('tab', 1, 0.3)
+        
         messagebox.showinfo("Info","Finalizado! \n dados fornecidos foram preenchidos, por favor continue manualmente.")
+        return escolha_texto
     else:
         messagebox.showinfo("Info","Tarefa cancelada pelo usuário")
