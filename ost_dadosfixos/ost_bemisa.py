@@ -43,7 +43,6 @@ def ost_bemisa(placa, ticket, peso, emissao):
         else:
             messagebox.showerror("Erro", "Opção inválida! Tarefa cancelada.")
             return
-        verificar_usuario()
         # Verificar e ajustar Caps Lock
         if verifica_caps_lock():
             desativar_caps_lock()
