@@ -17,7 +17,7 @@ def deletar_xml_na_pasta():
         pasta_especifica = downloads_path
 
     for arquivo in os.listdir(pasta_especifica):
-        if arquivo.endswith(".xml") or (arquivo.endswith(".pdf") and "CONTRATO" in arquivo.upper()):
+        if arquivo.endswith(".xml") or (arquivo.endswith(".pdf") and "CONTRATO" in arquivo.upper()) or (arquivo.endswith(".pdf") and "CTE" in arquivo.upper()) or (arquivo.endswith(".pdf") and "OST" in arquivo.upper()):
             caminho_arquivo = os.path.join(pasta_especifica, arquivo)
             os.remove(caminho_arquivo)
             print(f"Arquivo {arquivo} removido com sucesso.")

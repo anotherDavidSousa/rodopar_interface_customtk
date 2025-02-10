@@ -10,8 +10,13 @@ USER_NAME = os.getenv("USERNAME")  # Nome do usuário atual
 MONITOR_DIR = (
     r"D:\Downloads" if USER_NAME.lower() == "david" else os.path.join(USER_PROFILE, "Downloads")
 )
-SEARCH_PATTERN = r"NºCONTRATO:\s*(\d{2})/(?:\w+|\d{2})/(\d+[\.,]?\d*)"
-NEW_NAME_PREFIX = "CONTRATO_"  # Prefixo para o novo nome do arquivo
+# Padrões para renomeação
+CONTRACT_PATTERN = r"NºCONTRATO:\s*(\d{2})/(?:\w+|\d{2})/(\d+[\.,]?\d*)"
+OST_PATTERN = r"ORDEM DE SERVIÇO DE TRANSPORTE - Nº\.:\s*\d+\s*/\s*([UOST]+)\s*/\s*(\d+)"
+RPF_PATTERN = r"RPF:\d+/\d+/(\d+\.?\d*)"
+NEW_NAME_PREFIX_CONTRACT = "CONTRATO_"  # Prefixo para o novo nome do arquivo (contrato)
+NEW_NAME_PREFIX_OST = "OST_"  # Prefixo para o novo nome do arquivo (OST)
+NEW_NAME_PREFIX_CTE = "CTE_"  # Prefixo para o novo nome do arquivo (CTE)
 CHECK_INTERVAL = 5  # Intervalo entre varreduras em segundos
 
 # Conjunto de hashes de arquivos já processados
@@ -58,16 +63,43 @@ def process_pdf(file_path):
         reader = PdfReader(file_path)
         content = "".join(page.extract_text() for page in reader.pages)
 
-        # Procura pelo padrão do contrato no conteúdo
-        match = re.search(SEARCH_PATTERN, content)
-        if match:
-            contrato_numero = match.group(2).replace(".", "")  # Extrai o número após a última barra e remove o ponto
-            new_name = f"{NEW_NAME_PREFIX}{contrato_numero}.pdf"
+        # Verifica o padrão do contrato
+        contract_match = re.search(CONTRACT_PATTERN, content)
+        if contract_match:
+            contrato_numero = contract_match.group(2).replace(".", "")  # Extrai o número após a última barra e remove o ponto
+            new_name = f"{NEW_NAME_PREFIX_CONTRACT}{contrato_numero}.pdf"
             new_path = renomear_com_sufixo(MONITOR_DIR, new_name)
             os.rename(file_path, new_path)
             print(f"Arquivo renomeado para: {new_path}")
-        else:
-            print(f"NºCONTRATO: não encontrado em {file_path}")
+            return  # Sai da função após renomear
+
+        # Verifica o padrão OST
+        ost_match = re.search(OST_PATTERN, content)
+        if ost_match:
+            tipo = ost_match.group(1).strip()  # Captura "U" ou "OST"
+            numero = ost_match.group(2).strip()  # Captura o número final
+            if tipo.upper() == "U":
+                new_name = f"{NEW_NAME_PREFIX_OST}U_{numero}.pdf"
+            else:
+                new_name = f"{NEW_NAME_PREFIX_OST}{numero}.pdf"
+            new_path = renomear_com_sufixo(MONITOR_DIR, new_name)
+            os.rename(file_path, new_path)
+            print(f"Arquivo renomeado para: {new_path}")
+            return  # Sai da função após renomear
+
+        # Verifica o padrão RPF
+        rpf_match = re.search(RPF_PATTERN, content)
+        if rpf_match:
+            numero = rpf_match.group(1).replace(".", "")  # Remove o ponto do número
+            new_name = f"{NEW_NAME_PREFIX_CTE}{numero}.pdf"
+            new_path = renomear_com_sufixo(MONITOR_DIR, new_name)
+            os.rename(file_path, new_path)
+            print(f"Arquivo renomeado para: {new_path}")
+            return  # Sai da função após renomear
+
+        # Se nenhum padrão for encontrado
+        print(f"Nenhum padrão válido encontrado em {file_path}")
+
     except Exception as e:
         print(f"Erro ao processar o arquivo {file_path}: {e}")
 
