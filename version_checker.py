@@ -100,7 +100,7 @@ class VersionChecker:
         periodic_check()
 
 # Configurações de versão e URLs
-current_version = "v0.1.0-alpha"
+current_version = "v0.2.0-alpha"
 repo_api_url = "https://api.github.com/repos/anotherDavidSousa/rodopar_interface_customtk/releases/latest"
 download_url = "https://github.com/anotherDavidSousa/rodopar_interface_customtk/releases/latest"
 
