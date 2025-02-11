@@ -52,8 +52,8 @@ def ost_bemisa(placa, ticket, peso, emissao):
             destinatario_cnpj = '08720614000664'
             terminal_entrega = '07695967000184'
             codigo_fiscal = '5101'
-            falar('Manifestando para Terminal João Correia')
-            escolha_texto =  "TBJC"
+            falar('Manifestando para Terminal de cargas SARZEDO')
+            escolha_texto =  "TCS"
 
         else:
             messagebox.showerror("Erro", "Opção inválida! Tarefa cancelada.")

@@ -60,7 +60,12 @@ class VersionChecker:
         label.pack(pady=20)
         
         def open_download():
-            os.system(f'start {self.download_url}')  # Abre a URL do download
+            if sys.platform == "win32":
+                os.system(f'start {self.download_url}')
+            elif sys.platform == "darwin":
+                os.system(f'open {self.download_url}')
+            else:
+                os.system(f'xdg-open {self.download_url}')
             sys.exit()
         
         download_button = ctk.CTkButton(app, text="Baixar Atualização", command=open_download)
@@ -76,6 +81,7 @@ class VersionChecker:
         if latest_version:
             print(f"Nova versão disponível: {latest_version}. Forçando atualização...")
             self.force_update()
+            sys.exit()  # Encerra o programa se uma nova versão for detectada
         else:
             print("Você está usando a versão mais recente.")
 

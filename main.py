@@ -14,14 +14,13 @@ from xml_process.cte_xml_carga import ProcessadorXML2
 from xml_process.cte_xml_geral import ProcessadorXML3
 from version_checker import VersionChecker
 
-# Configurações de versão e URLs
 current_version = "v0.1.0-alpha"
 repo_url = "https://api.github.com/repos/anotherDavidSousa/rodopar_interface_customtk/releases/latest"
 download_url = "https://github.com/anotherDavidSousa/rodopar_interface_customtk/releases/latest"
 
 # Verificação de versão
 checker = VersionChecker(current_version, repo_url, download_url)
-checker.run()
+checker.run()  # Verifica a versão antes de iniciar a interface
 
 #EVENTOS DE MONITORAMENTE DE .PDF
 monitor_thread = None
@@ -96,7 +95,7 @@ def validar_ticket(ticket):
         messagebox.showerror("Erro de Validação", "O ticket não pode começar com 0.")
         return False
 
-    valor_maximo = 200000  
+    valor_maximo = 180000  
     if int(ticket) > valor_maximo:
         messagebox.showerror("Erro de Validação", f"O ticket não pode ser maior que {valor_maximo}.")
         return False
@@ -108,8 +107,8 @@ def validar_peso(peso):
         messagebox.showerror("Erro de Validação", "O peso deve conter exatamente 5 números.")
         return False
     
-    if int(peso) > 35000:
-        messagebox.showerror("Erro de Validação", "O peso não pode ser maior que 35000.")
+    if int(peso) > 39000:
+        messagebox.showerror("Erro de Validação", "O peso não pode ser maior que 39000.")
         return False
 
     return True  # Peso válido
