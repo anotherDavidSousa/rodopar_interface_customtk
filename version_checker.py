@@ -99,16 +99,16 @@ class VersionChecker:
         # Inicia a primeira verificação
         periodic_check()
 
-# Configurações de versão e URLs
-current_version = "v0.2.0-alpha"
-repo_api_url = "https://api.github.com/repos/anotherDavidSousa/rodopar_interface_customtk/releases/latest"
-download_url = "https://github.com/anotherDavidSousa/rodopar_interface_customtk/releases/latest"
+# # Configurações de versão e URLs
+# current_version = "v0.2.0-alpha"
+# repo_api_url = "https://api.github.com/repos/anotherDavidSousa/rodopar_interface_customtk/releases/latest"
+# download_url = "https://github.com/anotherDavidSousa/rodopar_interface_customtk/releases/latest"
 
-# Instancia o verificador de versões
-checker = VersionChecker(current_version, repo_api_url, download_url)
+# # Instancia o verificador de versões
+# checker = VersionChecker(current_version, repo_api_url, download_url)
 
-# Verificação inicial
-checker.run()
+# # Verificação inicial
+# checker.run()
 
-# Inicia a verificação periódica (a cada 1 hora)
-checker.start_periodic_check(interval=3600)  # 3600 segundos = 1 hora
+# # Inicia a verificação periódica (a cada 1 hora)
+# checker.start_periodic_check(interval=3600)  # 3600 segundos = 1 hora

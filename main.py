@@ -21,6 +21,7 @@ download_url = "https://github.com/anotherDavidSousa/rodopar_interface_customtk/
 # Verificação de versão
 checker = VersionChecker(current_version, repo_url, download_url)
 checker.run()  # Verifica a versão antes de iniciar a interface
+checker.start_periodic_check(interval=3600)  # 3600 segundos = 1 hora
 
 #EVENTOS DE MONITORAMENTE DE .PDF
 monitor_thread = None
