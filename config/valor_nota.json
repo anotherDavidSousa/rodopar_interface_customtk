@@ -19,6 +19,12 @@
             "cnpj_emit": "31096483000284",
             "cnpj_dest": "15643555000471",
             "campo_valor": "vProd"
+        },
+        {
+            "cnpj_emit": "25462356000259",
+            "cnpj_dest": "17469701006612",
+            "campo_valor": "vProd",
+            "Rota": "MGOXIDOS X JOÃO MONLEVADE"
         }
     ],
     "padrao": {

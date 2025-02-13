@@ -73,6 +73,7 @@ class DadosXML:
         self.produto = None
         self.tomador_frete = None
         self.pesoqCom = None
+        self.pesoB = None
 
     def validar_dhRecbto(self):
         if self.dhRecbto and (len(self.dhRecbto) != 12 or not self.dhRecbto.isdigit()):
@@ -144,6 +145,11 @@ class DadosXML:
         self.atlas_prod = atlas_prod_element.text if atlas_prod_element is not None else None
         if self.atlas_prod:
             self.atlas_prod = self.atlas_prod.replace(',', '')
+        # pesoB criado para o XML da MGOXIDO x JOÃO MONLEVADE
+        pesoB_element = root.find('.//{http://www.portalfiscal.inf.br/nfe}transp/{http://www.portalfiscal.inf.br/nfe}vol/{http://www.portalfiscal.inf.br/nfe}pesoB')
+        self.pesoB = pesoB_element.text if pesoB_element is not None else None
+        if self.pesoB:
+            self.pesoB = self.pesoB.replace('.', '')
 
         self.fertran = extrair_valor_elemento(root, './/{http://www.portalfiscal.inf.br/nfe}transporta/{http://www.portalfiscal.inf.br/nfe}xNome')
         self.nNF = extrair_valor_elemento(root, './/{http://www.portalfiscal.inf.br/nfe}ide/{http://www.portalfiscal.inf.br/nfe}nNF')
@@ -159,10 +165,10 @@ class DadosXML:
         self.cfop_text = extrair_valor_elemento(root, './/{http://www.portalfiscal.inf.br/nfe}det/{http://www.portalfiscal.inf.br/nfe}prod/{http://www.portalfiscal.inf.br/nfe}CFOP')
         self.produto = extrair_valor_elemento(root, './/{http://www.portalfiscal.inf.br/nfe}det/{http://www.portalfiscal.inf.br/nfe}prod/{http://www.portalfiscal.inf.br/nfe}xProd')
         self.tomador_frete = extrair_valor_elemento(root, './/{http://www.portalfiscal.inf.br/nfe}transp/{http://www.portalfiscal.inf.br/nfe}modFrete')
-
+        
         self.validar_natureza_operacao(self.natOp, self.produto)
 
-        print("Cahve",self.chNFe)
+        print("Chave",self.chNFe)
         print("data",self.dhRecbto)
         print("peso",self.pesoL)
         print("valor",self.vLiq)
@@ -183,3 +189,4 @@ class DadosXML:
         print("pagador do frete",self.tomador_frete)
         print("peso qCom",self.pesoqCom)
         print("natureza", self.natOp)
+        print("pesoB", self.pesoB)

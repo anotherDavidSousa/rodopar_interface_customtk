@@ -13,7 +13,7 @@ MONITOR_DIR = (
 # Padrões para renomeação
 CONTRACT_PATTERN = r"NºCONTRATO:\s*(\d{2})/(?:\w+|\d{2})/(\d+[\.,]?\d*)"
 OST_PATTERN = r"ORDEM DE SERVIÇO DE TRANSPORTE - Nº\.:\s*\d+\s*/\s*([OST]+)\s*/\s*(\d+)"
-RPF_PATTERN = r"RPF:\d+/\d+/(\d+\.?\d*)"
+RPF_PATTERN = r"MDFE:\d+/\d+/(\d+\.?\d*)"
 NEW_NAME_PREFIX_CONTRACT = "CONTRATO_"  # Prefixo para o novo nome do arquivo (contrato)
 NEW_NAME_PREFIX_OST = "OST_"  # Prefixo para o novo nome do arquivo (OST)
 NEW_NAME_PREFIX_CTE = "CTE_"  # Prefixo para o novo nome do arquivo (CTE)

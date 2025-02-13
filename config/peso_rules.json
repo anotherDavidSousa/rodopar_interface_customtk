@@ -35,6 +35,12 @@
             "cnpj_emit": "27748484000108",
             "cnpj_dest": "31096483000284",
             "campo_peso": "atlas_prod"
+        },
+        {
+            "cnpj_emit": "25462356000259",
+            "cnpj_dest": "17469701006612",
+            "campo_peso": "pesoB",
+            "Rota": "MGOXIDOS X JOÃO MONLEVADE"
         }
     ],
     "padrao": {
