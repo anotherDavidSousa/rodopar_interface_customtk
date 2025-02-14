@@ -9,6 +9,9 @@ from utils import deletar_xml_na_pasta, falar
 from ost_dadosfixos.ost_bemisa import ost_bemisa
 from ost_dadosfixos.ost_bemisa_geral import ost_bemisa_geral
 from ost_dadosfixos.ost_bemisa_carga import ost_bemisa_carga
+from ost_dadosfixos.ost_vamtec import ost_vamtec
+from ost_dadosfixos.ost_vamtec_geral import ost_vamtec_geral
+from ost_dadosfixos.ost_vamtec_carga import ost_vamtec_carga
 from xml_process.cte_xml import ProcessadorXML
 from xml_process.cte_xml_carga import ProcessadorXML2
 from xml_process.cte_xml_geral import ProcessadorXML3
@@ -86,19 +89,28 @@ def Manifestar_by_xml_parte_3():
 
 
 #OST
-def validar_ticket(ticket):
+def validar_ticket(ticket, origem="BEMISA"):
+    if origem == "BEMISA":
+        # Regras para BEMISA
+        if not (len(ticket) == 6 and ticket.isdigit()):
+            messagebox.showerror("Erro de Validação", "O ticket deve conter exatamente 6 números.")
+            return False
 
-    if not (len(ticket) == 6 and ticket.isdigit()):
-        messagebox.showerror("Erro de Validação", "O ticket deve conter exatamente 6 números.")
-        return False
+        if ticket.startswith("0"):
+            messagebox.showerror("Erro de Validação", "O ticket não pode começar com 0.")
+            return False
 
-    if ticket.startswith("0"):
-        messagebox.showerror("Erro de Validação", "O ticket não pode começar com 0.")
-        return False
-
-    valor_maximo = 180000  
-    if int(ticket) > valor_maximo:
-        messagebox.showerror("Erro de Validação", f"O ticket não pode ser maior que {valor_maximo}.")
+        valor_maximo = 180000
+        if int(ticket) > valor_maximo:
+            messagebox.showerror("Erro de Validação", f"O ticket não pode ser maior que {valor_maximo}.")
+            return False
+    elif origem == "VAMTEC":
+        # Regras para VAMTEC (sem restrições de tamanho ou valor)
+        if not ticket.isdigit():
+            messagebox.showerror("Erro de Validação", "O ticket deve conter apenas números.")
+            return False
+    else:
+        messagebox.showerror("Erro de Validação", "Origem do ticket inválida.")
         return False
 
     return True  # Ticket válido
@@ -124,7 +136,7 @@ def executar_ost_bemisa():
     data_limpa = emissao.replace("/", "").replace(" ", "").replace(":", "")
     
     # Validações
-    if not validar_ticket(ticket):
+    if not validar_ticket(ticket, origem="BEMISA"):
         return
 
     if not validar_peso(peso):
@@ -140,7 +152,7 @@ def executar_ost_bemisa():
 
     if escolha:
         # Atualiza o campo de informação com a escolha, data e ticket
-        mensagemost.set(f"{escolha} - Data: {data_formatada} - TICKET: {ticket}")
+        mensagemostbemisa.set(f"{escolha} - Data: {data_formatada} - TICKET: {ticket}")
 
 def ost_bemisa_parte_1():
     placa = placa_bemisa_text.get().strip()
@@ -154,7 +166,7 @@ def ost_bemisa_parte_2():
     data_limpa = emissao.replace("/", "").replace(" ", "").replace(":", "")
     
     # Validações
-    if not validar_ticket(ticket):
+    if not validar_ticket(ticket, origem="BEMISA"):
         return
 
     if not validar_peso(peso):
@@ -170,7 +182,64 @@ def ost_bemisa_parte_2():
 
     if escolha:
         # Atualiza o campo de informação com a escolha, data e ticket
-        mensagemost.set(f"{escolha} - Data: {data_formatada} - TICKET: {ticket}")
+        mensagemostbemisa.set(f"{escolha} - Data: {data_formatada} - TICKET: {ticket}")
+
+def executar_ost_vamtec():
+    # Obtendo os valores dos campos
+    placa = placa_vamtec_text.get().strip()
+    ticket = ticket_vamtec_text.get().strip()
+    peso = peso_vamtec_text.get().strip()
+    emissao = data_vamtec_text.get().strip()
+    data_limpa = emissao.replace("/", "").replace(" ", "").replace(":", "")
+    
+    # Validações
+    if not validar_ticket(ticket, origem="VAMTEC"):
+        return
+
+    if not validar_peso(peso):
+        return 
+
+    try:
+        data_formatada = emissao.split("/")[0] + "/" + emissao.split("/")[1]
+    except IndexError:
+        data_formatada = "Data inválida"
+
+    # Chamada da função ost_bemisa com os dados validados
+    escolha = ost_vamtec(placa, ticket, peso, data_limpa)
+
+    if escolha:
+        # Atualiza o campo de informação com a escolha, data e ticket
+        mensagemostvamtec.set(f"{escolha} - Data: {data_formatada} - TICKET: {ticket}")
+
+def ost_vamtec_parte_1():
+    placa = placa_vamtec_text.get().strip()
+    ost_vamtec_geral(placa)
+
+def ost_vamtec_parte_2():
+    # Obtendo os valores dos campos
+    ticket = ticket_vamtec_text.get().strip()
+    peso = peso_vamtec_text.get().strip()
+    emissao = data_vamtec_text.get().strip()
+    data_limpa = emissao.replace("/", "").replace(" ", "").replace(":", "")
+    
+    # Validações
+    if not validar_ticket(ticket, origem="VAMTEC"):
+        return
+
+    if not validar_peso(peso):
+        return 
+
+    try:
+        data_formatada = emissao.split("/")[0] + "/" + emissao.split("/")[1]
+    except IndexError:
+        data_formatada = "Data inválida"
+
+    # Chamada da função ost_bemisa_carga com os dados validados
+    escolha = ost_vamtec_carga(ticket, peso, data_limpa)
+
+    if escolha:
+        # Atualiza o campo de informação com a escolha, data e ticket
+        mensagemostvamtec.set(f"{escolha} - Data: {data_formatada} - TICKET: {ticket}")
 
 #INICIALIZAÇÃO E CONFIGURAÇÕES DO CUSTOMTK
 ctk.set_appearance_mode("dark")
@@ -271,6 +340,7 @@ def verificar_entrada(event):
 
     processar_placa(placa_cte_text.get(), placa_cte_text)
     processar_placa(placa_bemisa_text.get(), placa_bemisa_text)
+    processar_placa(placa_vamtec_text.get(), placa_vamtec_text)
     
 #FORMATAÇÃO VISUAL DA DATA DE EMISSÃO DO TICKET
 data_bemisa_bruto = ""  
@@ -300,16 +370,26 @@ def formatar_data(event):
 def obter_data_bemisa_bruto():
     return data_bemisa_bruto
 
+# Variável global para controle de confirmação do ano
 ano_confirmado = False
-def limpar_ano_confirmado():
-    global ano_confirmado
-    ano_confirmado = False  # Limpa a confirmação após o tempo determinado
 
-def verificar_ano(event):
+# Função para formatar a data
+def formatar_data(event, text_field):
+    current_text = text_field.get().replace("/", "").replace(":", "").replace(" ", "")  # Remove formatação existente
+    if len(current_text) >= 2 and len(current_text) <= 12:
+        formatted_text = (
+            f"{current_text[:2]}/{current_text[2:4]}/{current_text[4:8]} "
+            f"{current_text[8:10]}:{current_text[10:]}"
+        )
+        text_field.delete(0, tk.END)
+        text_field.insert(0, formatted_text)
+
+# Função para verificar o ano
+def verificar_ano(event, text_field):
     global ano_confirmado  # Acessa a variável global
 
-    entrada = data_bemisa_text.get()
-    entrada_limpa = "".join(filter(str.isdigit, entrada))
+    entrada = text_field.get()
+    entrada_limpa = "".join(filter(str.isdigit, entrada))  # Remove caracteres não numéricos
 
     # Verifica se o ano foi digitado completamente
     if len(entrada_limpa) >= 8:
@@ -317,7 +397,7 @@ def verificar_ano(event):
 
         if ano != "2025" and not ano_confirmado:
             # Reproduz o som de alerta
-            falar("O ano informado é {ano}, o ano atual é 2025. Deseja continuar assim mesmo?")
+            falar(f"O ano informado é {ano}, o ano atual é 2025. Deseja continuar assim mesmo?")
 
             # Solicita confirmação ao usuário
             resposta = messagebox.askyesno(
@@ -326,30 +406,25 @@ def verificar_ano(event):
             )
 
             if resposta:
-                
                 ano_confirmado = True
-
-                app.after(30000, limpar_ano_confirmado)
+                app.after(30000, limpar_ano_confirmado)  # Reseta a confirmação após 30 segundos
             else:
-                
-                data_bemisa_text.delete(0, tk.END)
+                text_field.delete(0, tk.END)  # Limpa o campo se o usuário cancelar
                 messagebox.showinfo("Operação cancelada", "Por favor, insira um ano válido.")
 
-def format_date_time(event):
-    current_text = data_bemisa_text.get()
-    if len(current_text) == 12:
-        formatted_text = f"{current_text[:2]}/{current_text[2:4]}/{current_text[4:8]}{current_text[8:10]}:{current_text[10:]}"
-        data_bemisa_text.delete(0, tk.END)
-        data_bemisa_text.insert(0, formatted_text)
+# Função para resetar a confirmação do ano
+def limpar_ano_confirmado():
+    global ano_confirmado
+    ano_confirmado = False
 
 # Função para limpar um campo específico
 def limpar_campo_especifico(*campos):
     for campo in campos:
         campo.delete(0, tk.END)
         nfe_info_var.set("")
-        mensagemost.set("")
+        mensagemostbemisa.set("")
+        mensagemostvamtec.set("")
         deletar_xml_na_pasta()
-
 
 #WIDGETS DA TAB1
 placa_cte_text = ctk.CTkEntry(tab1, placeholder_text="Placa do cavalo", font=('Arial', 14))
@@ -419,21 +494,21 @@ peso_bemisa_text.grid(column=1, row=1, sticky="NW", pady=7, padx=5)
 
 data_bemisa_text = ctk.CTkEntry(tab2, placeholder_text="Data emissão ", font=('Arial', 13))
 data_bemisa_text.grid(column=0, row=3, sticky="NW", pady=7, padx=5)
-data_bemisa_text.bind("<KeyRelease>", formatar_data)
-data_bemisa_text.bind("<FocusOut>", verificar_ano)
+data_bemisa_text.bind("<KeyRelease>", lambda event: formatar_data(event, data_bemisa_text))
+data_bemisa_text.bind("<FocusOut>", lambda event: verificar_ano(event, data_bemisa_text))
 
-button_tab1 = ctk.CTkButton(tab2, text="OST Completo",font=('Arial', 14), command=executar_ost_bemisa)
-button_tab1.grid(column=1, row=3, sticky="NW", pady=7, padx=5)
+button_tab2 = ctk.CTkButton(tab2, text="OST Completo",font=('Arial', 14), command=executar_ost_bemisa)
+button_tab2.grid(column=1, row=3, sticky="NW", pady=7, padx=5)
 
-button_tab1_2 = ctk.CTkButton(tab2, text="Geral",font=('Arial', 14), command=ost_bemisa_parte_1)
-button_tab1_2.grid(column=0, row=4, sticky="NWES", pady=10, padx=5)
+button_tab2_2 = ctk.CTkButton(tab2, text="Geral",font=('Arial', 14), command=ost_bemisa_parte_1)
+button_tab2_2.grid(column=0, row=4, sticky="NWES", pady=10, padx=5)
 
-button_tab1_3 = ctk.CTkButton(tab2, text="Comp. Carga",font=('Arial', 14), command=ost_bemisa_parte_2)
-button_tab1_3.grid(column=1, row=4, sticky="NWES", pady=10, padx=5)
+button_tab2_3 = ctk.CTkButton(tab2, text="Comp. Carga",font=('Arial', 14), command=ost_bemisa_parte_2)
+button_tab2_3.grid(column=1, row=4, sticky="NWES", pady=10, padx=5)
 
-mensagemost = tk.StringVar(value="")
-mensagemost_info = ctk.CTkEntry(tab2, textvariable=mensagemost, state="readonly", font=('Arial', 14))
-mensagemost_info.grid(column=0, row=5,columnspan=2, sticky="NWES", pady=0, padx=5)
+mensagemostbemisa = tk.StringVar(value="")
+mensagemostbemisa_info = ctk.CTkEntry(tab2, textvariable=mensagemostbemisa, state="readonly", font=('Arial', 14))
+mensagemostbemisa_info.grid(column=0, row=5,columnspan=2, sticky="NWES", pady=0, padx=5)
 
 image = ctk.CTkImage(Image.open("media/image/clean_icon.png"), size=(20, 20))
 clean_button = ctk.CTkButton(tab2,text="",width=0,image=image, command=lambda: limpar_campo_especifico(placa_bemisa_text,ticket_bemisa_text,peso_bemisa_text,data_bemisa_text))
@@ -442,5 +517,40 @@ clean_button.grid(column=1, row=0,sticky="NE", pady=5, padx=0)
 tab2.columnconfigure(0, weight=1)
 tab2.columnconfigure(1, weight=1)
 
+
+placa_vamtec_text = ctk.CTkEntry(tab3, placeholder_text="Placa do cavalo", font=('Arial', 14))
+placa_vamtec_text.grid(column=0, row=0, sticky="NW", pady=7, padx=5)
+placa_vamtec_text.bind("<KeyRelease>", verificar_entrada)
+
+ticket_vamtec_text = ctk.CTkEntry(tab3, placeholder_text="Nº do Ticket", font=('Arial', 14))
+ticket_vamtec_text.grid(column=0, row=1, sticky="NW", pady=7, padx=5)
+
+peso_vamtec_text = ctk.CTkEntry(tab3, placeholder_text="Peso da nota", font=('Arial', 14))
+peso_vamtec_text.grid(column=1, row=1, sticky="NW", pady=7, padx=5)
+
+data_vamtec_text = ctk.CTkEntry(tab3, placeholder_text="Data emissão ", font=('Arial', 13))
+data_vamtec_text.grid(column=0, row=3, sticky="NW", pady=7, padx=5)
+data_vamtec_text.bind("<KeyRelease>", lambda event: formatar_data(event, data_vamtec_text))
+data_vamtec_text.bind("<FocusOut>", lambda event: verificar_ano(event, data_vamtec_text))
+
+button_tab3 = ctk.CTkButton(tab3, text="OST Completo",font=('Arial', 14), command=executar_ost_vamtec)
+button_tab3.grid(column=1, row=3, sticky="NW", pady=7, padx=5)
+
+button_tab3_2 = ctk.CTkButton(tab3, text="Geral",font=('Arial', 14), command=ost_vamtec_parte_1)
+button_tab3_2.grid(column=0, row=4, sticky="NWES", pady=10, padx=5)
+
+button_tab3_3 = ctk.CTkButton(tab3, text="Comp. Carga",font=('Arial', 14), command=ost_vamtec_parte_2)
+button_tab3_3.grid(column=1, row=4, sticky="NWES", pady=10, padx=5)
+
+mensagemostvamtec = tk.StringVar(value="")
+mensagemostvamtec_info = ctk.CTkEntry(tab3, textvariable=mensagemostvamtec, state="readonly", font=('Arial', 14))
+mensagemostvamtec_info.grid(column=0, row=5,columnspan=2, sticky="NWES", pady=0, padx=5)
+
+image = ctk.CTkImage(Image.open("media/image/clean_icon.png"), size=(20, 20))
+clean_button = ctk.CTkButton(tab3,text="",width=0,image=image, command=lambda: limpar_campo_especifico(placa_vamtec_text,ticket_vamtec_text,peso_vamtec_text,data_vamtec_text))
+clean_button.grid(column=1, row=0,sticky="NE", pady=5, padx=0)
+
+tab3.columnconfigure(0, weight=1)
+tab3.columnconfigure(1, weight=1)
 # Iniciando o loop da aplicação
 app.mainloop()
