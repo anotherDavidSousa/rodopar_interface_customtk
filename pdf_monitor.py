@@ -13,7 +13,7 @@ MONITOR_DIR = (
 # Padrões para renomeação
 CONTRACT_PATTERN = r"NºCONTRATO:\s*(\d{2})/(?:\w+|\d{2})/(\d+[\.,]?\d*)"
 OST_PATTERN = r"ORDEM DE SERVIÇO DE TRANSPORTE - Nº\.:\s*\d+\s*/\s*([OST]+)\s*/\s*(\d+)"
-RPF_PATTERN = r"MDFE:\d+/\d+/(\d+\.?\d*)"
+RPF_PATTERN = r"CT-E\s+Nro\.?\s+Documento\s+(\d+)"
 NEW_NAME_PREFIX_CONTRACT = "CONTRATO_"  # Prefixo para o novo nome do arquivo (contrato)
 NEW_NAME_PREFIX_OST = "OST_"  # Prefixo para o novo nome do arquivo (OST)
 NEW_NAME_PREFIX_CTE = "CTE_"  # Prefixo para o novo nome do arquivo (CTE)
@@ -90,14 +90,13 @@ def process_pdf(file_path):
         # Verifica o padrão RPF
         rpf_match = re.search(RPF_PATTERN, content)
         if rpf_match:
-            numero = rpf_match.group(1).replace(".", "")  # Remove o ponto do número
+            numero = rpf_match.group(1)  # Captura o número do documento CT-E
             new_name = f"{NEW_NAME_PREFIX_CTE}{numero}.pdf"
             new_path = renomear_com_sufixo(MONITOR_DIR, new_name)
             os.rename(file_path, new_path)
             print(f"Arquivo renomeado para: {new_path}")
-            return  # Sai da função após renomear
+            return  
 
-        # Se nenhum padrão for encontrado
         print(f"Nenhum padrão válido encontrado em {file_path}")
 
     except Exception as e:
