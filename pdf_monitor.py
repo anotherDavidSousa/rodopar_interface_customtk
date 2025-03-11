@@ -1,7 +1,7 @@
 import os
 import time
 import re
-from PyPDF2 import PdfReader
+import pdfplumber
 import hashlib
 
 # Configurações
@@ -50,18 +50,16 @@ def renomear_com_sufixo(base_path, new_name):
     return new_path
 
 def process_pdf(file_path):
-    """Processa o arquivo PDF e o renomeia, se necessário."""
     try:
         # Gera hash do arquivo para evitar reprocessamento
         file_hash = gerar_hash_arquivo(file_path)
         if file_hash in processed_hashes:
-            # print(f"Arquivo já processado: {file_path}")
             return
         processed_hashes.add(file_hash)
 
-        # Lê o conteúdo do PDF
-        reader = PdfReader(file_path)
-        content = "".join(page.extract_text() for page in reader.pages)
+        # Lê o conteúdo do PDF usando pdfplumber
+        with pdfplumber.open(file_path) as pdf:
+            content = "".join(page.extract_text() for page in pdf.pages)
 
         # Verifica o padrão do contrato
         contract_match = re.search(CONTRACT_PATTERN, content)
