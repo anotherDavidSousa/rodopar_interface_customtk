@@ -11,7 +11,7 @@ MONITOR_DIR = (
     r"D:\Downloads" if USER_NAME.lower() == "david" else os.path.join(USER_PROFILE, "Downloads")
 )
 # Padrões para renomeação
-CONTRACT_PATTERN = r"NºCONTRATO:\s*(\d{2})/(?:\w+|\d{2})/(\d+[\.,]?\d*)"
+CONTRACT_PATTERN = r"NºCONTRATO.......\s*(\d{2})/(?:\w+|\d{2})/(\d+[\.,]?\d*)"
 OST_PATTERN = r"ORDEM DE SERVIÇO DE TRANSPORTE - Nº\.:\s*\d+\s*/\s*([OST]+)\s*/\s*(\d+)"
 RPF_PATTERN = r"CT-E\s+Nro\.?\s+Documento\s+(\d+)"
 NEW_NAME_PREFIX_CONTRACT = "CONTRATO_"  # Prefixo para o novo nome do arquivo (contrato)
