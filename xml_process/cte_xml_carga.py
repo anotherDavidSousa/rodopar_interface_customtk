@@ -9,7 +9,7 @@ import json
 
 repetidor = RepetidorTeclas()
 
-with open('config/produtos.json', 'r') as arquivo:
+with open('config/produtos.json', 'r', encoding='utf-8') as arquivo:
     produtos = json.load(arquivo)
 
 class ProcessadorXML2:
