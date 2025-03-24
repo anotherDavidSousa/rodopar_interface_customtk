@@ -8,9 +8,6 @@ import json
 
 repetidor = RepetidorTeclas()
 
-with open('config/produtos.json', 'r', encoding='utf-8') as arquivo:
-    produtos = json.load(arquivo)
-
 class ProcessadorXML3:
     @staticmethod
     def processar_arquivo_3(placa, dt, tempo):
