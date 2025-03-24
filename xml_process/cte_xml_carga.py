@@ -9,7 +9,7 @@ import json
 
 repetidor = RepetidorTeclas()
 
-
+#O CÓDIGO DE ARROMBADO DO CARALHO QUE NÃO ATUALIZA NO VERSIONAMENTO
 class ProcessadorXML2:
     @staticmethod
     def processar_arquivo_2(tempo):
