@@ -25,6 +25,12 @@
             "cnpj_dest": "17469701006612",
             "campo_valor": "vProd",
             "Rota": "MGOXIDOS X JOÃO MONLEVADE"
+        },
+        {
+            "cnpj_emit": "44062636000486",
+            "cnpj_dest": "60894730002582",
+            "campo_valor": "vProd",
+            "Rota": "COBRASCAL X USIMINAS"
         }
     ],
     "padrao": {
