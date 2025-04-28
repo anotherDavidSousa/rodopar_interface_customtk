@@ -17,7 +17,7 @@ from xml_process.cte_xml_carga import ProcessadorXML2
 from xml_process.cte_xml_geral import ProcessadorXML3
 from version_checker import VersionChecker
 
-current_version = "v0.5.0-alpha"
+current_version = "v0.5.1-alpha"
 repo_url = "https://api.github.com/repos/anotherDavidSousa/rodopar_interface_customtk/releases/latest"
 download_url = "https://github.com/anotherDavidSousa/rodopar_interface_customtk/releases/latest"
 
@@ -100,7 +100,7 @@ def validar_ticket(ticket, origem="BEMISA"):
             messagebox.showerror("Erro de Validação", "O ticket não pode começar com 0.")
             return False
 
-        valor_maximo = 180000
+        valor_maximo = 189999
         if int(ticket) > valor_maximo:
             messagebox.showerror("Erro de Validação", f"O ticket não pode ser maior que {valor_maximo}.")
             return False
@@ -120,8 +120,8 @@ def validar_peso(peso):
         messagebox.showerror("Erro de Validação", "O peso deve conter exatamente 5 números.")
         return False
     
-    if int(peso) > 39000:
-        messagebox.showerror("Erro de Validação", "O peso não pode ser maior que 39000.")
+    if int(peso) > 40000:
+        messagebox.showerror("Erro de Validação", "O peso não pode ser maior que 49000.")
         return False
 
     return True  # Peso válido

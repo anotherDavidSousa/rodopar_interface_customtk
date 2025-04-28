@@ -32,7 +32,7 @@ def ost_vamtec_carga(ticket, peso, emissao):
             falar('Manifestando Vamtec Alegre')
             
         elif escolha == "2":
-            material = '274'
+            material = '475'
             escolha_texto =  "Vamtec limoeiro"
             falar('Manifestando Vamtec limoeiro')
 

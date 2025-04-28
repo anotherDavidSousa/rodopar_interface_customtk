@@ -39,7 +39,7 @@ def ost_vamtec(placa, ticket, peso, emissao):
             pagador_cnpj = '22034458000366'
             remetente_cnpj = '22034458000366'
             destinatario_cnpj = '22034458000102'
-            material = '274'
+            material = '475'
             escolha_texto =  "Vamtec limoeiro"
             falar('Manifestando Vamtec limoeiro')
 
