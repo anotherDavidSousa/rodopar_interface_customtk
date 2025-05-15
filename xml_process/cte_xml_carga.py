@@ -106,20 +106,20 @@ class ProcessadorXML2:
             time.sleep(tempo)
             repetidor.pressionar_tecla('tab', 2, 0.3)
 
-            caminho_json_peso = os.path.join('config', 'peso_rules.json') 
+            caminho_json_peso = os.path.join('config', 'peso_nota.json') 
 
             with open(caminho_json_peso, 'r', encoding='utf-8') as f:
-                peso_rules = json.load(f)
+                peso_nota = json.load(f)
 
             campo_peso = None
 
-            for regra in peso_rules['regras']:
+            for regra in peso_nota['regras']:
                 if dados.cnpj_emit == regra['cnpj_emit'] and dados.cnpj_dest == regra['cnpj_dest']:
                     campo_peso = regra['campo_peso']
                     break
 
             if not campo_peso:
-                campo_peso = peso_rules['padrao']['campo_peso']
+                campo_peso = peso_nota['padrao']['campo_peso']
 
             time.sleep(tempo)
             pyautogui.write(getattr(dados, campo_peso))

@@ -62,22 +62,22 @@ class ProcessadorXML:
             
             except FileNotFoundError:
                 falar("Arquivo de faturamento não encontrado")
-                # Adicione aqui tratamento de erro ou retorne
+                
             except json.JSONDecodeError:
                 falar("Erro no formato do JSON de faturamento")
-                # Trate erro de formatação
+
             def obter_tipo_faturamento(cnpj_emit, cnpj_dest):
                 """Verifica o tipo de serviço com base no JSON."""
                 for caso in tipo_faturamento["ordem_de_servico"]:
                     if cnpj_emit == caso["cnpj_emit"] and cnpj_dest == caso["cnpj_dest"]:
                         return "ordem_de_servico"
                 return "conhecimento_de_transporte"
+            
             tipo_servico = obter_tipo_faturamento(dados.cnpj_emit, dados.cnpj_dest)
-
+            falar(f"Manifestando para'{dados.nome_dest}'")
             time.sleep(2)
             wait_and_click(rotulos.imagens_faturamento, deslocamento_x=0)
             time.sleep(0.5)
-
             if tipo_servico == "ordem_de_servico":
                 repetidor.pressionar_tecla('down', 2)
                 pyautogui.press('right')
@@ -96,7 +96,7 @@ class ProcessadorXML:
             time.sleep(tempo)
             pyautogui.press('tab')
             time.sleep(tempo)
-                # Verifica se o aviso está presente na tela
+                
             repetidor.pressionar_tecla('enter', 4, 0.3)
             if dados.tomador_frete == '1':
                 wait_and_click(rotulos.imagens_pagador,deslocamento_x=60)
@@ -200,20 +200,20 @@ class ProcessadorXML:
             time.sleep(tempo)
             repetidor.pressionar_tecla('tab', 2, 0.3)
 
-            caminho_json_peso = os.path.join('config', 'peso_rules.json') 
+            caminho_json_peso = os.path.join('config', 'peso_nota.json') 
 
             with open(caminho_json_peso, 'r', encoding='utf-8') as f:
-                peso_rules = json.load(f)
+                peso_nota = json.load(f)
 
             campo_peso = None
 
-            for regra in peso_rules['regras']:
+            for regra in peso_nota['regras']:
                 if dados.cnpj_emit == regra['cnpj_emit'] and dados.cnpj_dest == regra['cnpj_dest']:
                     campo_peso = regra['campo_peso']
                     break
 
             if not campo_peso:
-                campo_peso = peso_rules['padrao']['campo_peso']
+                campo_peso = peso_nota['padrao']['campo_peso']
 
             time.sleep(tempo)
             pyautogui.write(getattr(dados, campo_peso))

@@ -58,33 +58,7 @@ def wait_and_click(rotulos, deslocamento_x=40, deslocamento_y=0, confidence=0.7,
         attempts += 1
         time.sleep(1)
     print(f"Texto '{rotulos}' não encontrado. Aguardando...")
-
-# class mensagem_exibida():
-#     def exibir_mensagem (cnpj_emit, cnpj_dest, nome_dest, dhRecbto, nNF):
-#         with open("mensagem_rotas.json", "r", encoding="utf-8") as arquivo:
-#             mensagem_rotas = json.load(arquivo)
-#         # Formatar a chave para busca no JSON
-#         chave_cnpjs = f"{cnpj_emit}-{cnpj_dest}"
-
-#         # Buscar no JSON ou usar um valor padrão
-#         nome_dest_formatado = mensagem_rotas.get(
-#             chave_cnpjs,
-#             nome_dest.replace("MUNICIPIO DE ", "")  # Valor padrão
-#         )
-
-#         # Formatar data
-#         try:
-#             data_formatada_nf = f"{dhRecbto[:2]}/{dhRecbto[2:4]}"  # Dia e mês no formato DD/MM
-#         except Exception:
-#             data_formatada_nf = "Data inválida"
-
-#         # Retornar as informações processadas
-#         return {
-#             "chave_nfe": nNF,
-#             "rota": nome_dest_formatado,
-#             "data": data_formatada_nf
-#         }
-    
+  
 class MensagemExibida:
     @staticmethod
     def carregar_mensagem_rotas(caminho_arquivo="mensagem_rotas.json"):
@@ -113,3 +87,4 @@ class MensagemExibida:
         return (
             f" {nome_dest_formatado} Data: {data_formatada_nf} NF: {nNF}."
         )
+    

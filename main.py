@@ -17,32 +17,32 @@ from xml_process.cte_xml_carga import ProcessadorXML2
 from xml_process.cte_xml_geral import ProcessadorXML3
 from version_checker import VersionChecker
 
-current_version = "v0.5.1-alpha"
+current_version = "v0.5.2-alpha"
 repo_url = "https://api.github.com/repos/anotherDavidSousa/rodopar_interface_customtk/releases/latest"
 download_url = "https://github.com/anotherDavidSousa/rodopar_interface_customtk/releases/latest"
 
 # Verificação de versão
 checker = VersionChecker(current_version, repo_url, download_url)
 checker.run()  # Verifica a versão antes de iniciar a interface
-checker.start_periodic_check(interval=3600)  # 3600 segundos = 1 hora
+checker.start_periodic_check(interval=3600)
 
 #EVENTOS DE MONITORAMENTE DE .PDF
 monitor_thread = None
-stop_event = threading.Event()  # Evento compartilhado para parar o monitoramento
+stop_event = threading.Event()  
 
 def start_monitoring():
     global monitor_thread
     if monitor_thread and monitor_thread.is_alive():
-        return  # Se o monitor já estiver ativo, não cria outro
+        return 
     monitor_thread = threading.Thread(target=pdf_monitor.monitor_directory, args=(stop_event,), daemon=True)
     monitor_thread.start()
 start_monitoring()
 # Função para parar o monitoramento quando a interface for fechada
 def on_close():
-    stop_event.set()  # Notifica o monitoramento para parar
+    stop_event.set()  
     if monitor_thread and monitor_thread.is_alive():
-        monitor_thread.join()  # Aguarda o término da thread
-    app.quit()  # Fecha a aplicação
+        monitor_thread.join()  
+    app.quit()  
 
 
 #CTE E XML EM GERAL
@@ -51,15 +51,15 @@ def Manifestar_by_xml():
     dt = dt_text.get()
     tempo_selecionado = tempo.get()
 
-    # Chama o método e captura a mensagem final
+    #mensagem pronta no final da ação
     mensagem_final = ProcessadorXML.processar_arquivo(placa, dt,tempo_selecionado)
 
     if mensagem_final:
-        # Atualiza o campo de texto somente leitura com a mensagem final
+        # Atualiza o campo de texto somente leitura
         nfe_info_var.set(mensagem_final)
     else:
         messagebox.showwarning("Aviso", "Nenhuma mensagem gerada ou ocorreu um erro.")
-        nfe_info_var.set("")  # Limpa o campo caso necessário
+        nfe_info_var.set("")  
 
 def Manifestar_by_xml_parte_2():
     tempo_selecionado = tempo.get()
@@ -71,7 +71,7 @@ def Manifestar_by_xml_parte_2():
         nfe_info_var.set(mensagem_final)
     else:
         messagebox.showwarning("Aviso", "Nenhuma mensagem gerada ou ocorreu um erro.")
-        nfe_info_var.set("")  # Limpa o campo caso necessário
+        nfe_info_var.set("")  
 
 def Manifestar_by_xml_parte_3():
     placa = placa_cte_text.get()
@@ -85,7 +85,7 @@ def Manifestar_by_xml_parte_3():
         nfe_info_var.set(mensagem_final)
     else:
         messagebox.showwarning("Aviso", "Nenhuma mensagem gerada ou ocorreu um erro.")
-        nfe_info_var.set("")  # Limpa o campo caso necessário
+        nfe_info_var.set("")  
 
 
 #OST
@@ -277,7 +277,7 @@ def abrir_janela_configuracoes():
 
     x_nova = int(screen_width_nova *  x_percent)  # Centralizando horizontalmente
     y_nova = int(screen_height_nova * y_percent) - 400  # Posicionando um pouco acima do centro vertical
-    nova_janela.geometry(f"400x250+{x_nova}+{y_nova}")
+    nova_janela.geometry(f"400x250+{x_nova}+{y_nova}")              
     
     # Adicionando widgets na janela de configurações
     label_config = ctk.CTkLabel(nova_janela, text="Configurações", font=("Helvetica", 16))
@@ -348,11 +348,11 @@ data_bemisa_bruto = ""
 def formatar_data(event):
     global data_bemisa_bruto
 
-    # Obtém o valor do campo de entrada e remove qualquer caractere não numérico
+    # captura a entrada e remove não inteiros
     entrada = data_bemisa_text.get()
     entrada_limpa = "".join(filter(str.isdigit, entrada))
 
-    # Atualiza a variável global para armazenar a versão sem formatação
+    # Atualizar para a versão formatada
     data_bemisa_bruto = entrada_limpa
 
     # Formata visualmente a entrada se tiver ao menos 12 caracteres (DDMMYYYYHHmm)
@@ -552,5 +552,7 @@ clean_button.grid(column=1, row=0,sticky="NE", pady=5, padx=0)
 
 tab3.columnconfigure(0, weight=1)
 tab3.columnconfigure(1, weight=1)
-# Iniciando o loop da aplicação
+
+
+
 app.mainloop()
