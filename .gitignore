@@ -1,7 +1,7 @@
 # Evitar arquivos de ambiente virtual
 env/
 venv/
-
+venv/
 # Cache do Python
 __pycache__/
 *.py[cod]
@@ -34,3 +34,4 @@ dist/
 # Configurações de ambiente
 .env
 .env.local
+.venv
