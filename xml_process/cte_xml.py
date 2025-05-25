@@ -147,6 +147,11 @@ class ProcessadorXML:
                 time.sleep(tempo)
                 pyautogui.write('15643555000471')
                 time.sleep(tempo)
+            elif dados.cnpj_emit == '08720614000664' and dados.cnpj_dest == '08720614000583':
+                repetidor.pressionar_tecla('tab',6)
+                time.sleep(tempo)
+                pyautogui.write('557')
+                time.sleep(tempo)
             time.sleep(tempo)
             wait_and_click(rotulos.imagens_compcarga,deslocamento_x=0)
             time.sleep(tempo)

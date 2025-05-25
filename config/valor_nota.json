@@ -31,6 +31,12 @@
             "cnpj_dest": "60894730002582",
             "campo_valor": "vProd",
             "Rota": "COBRASCAL X USIMINAS"
+        },
+        {
+            "cnpj_emit": "08720614000664",
+            "cnpj_dest": "08720614000583",
+            "campo_valor": "vProd",
+            "Rota": "BEMISA X SARZEDO"
         }
     ],
     "padrao": {

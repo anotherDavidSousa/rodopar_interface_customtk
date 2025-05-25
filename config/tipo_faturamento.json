@@ -7,6 +7,10 @@
         {
             "cnpj_emit": "22034458000366",
             "cnpj_dest": "33390170001312"
+        },
+        {  
+            "cnpj_emit": "08720614000664",
+            "cnpj_dest": "08720614000583"
         }
     ],
     "conhecimento_de_transporte": "padrão"

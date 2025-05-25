@@ -1,7 +1,8 @@
 # Evitar arquivos de ambiente virtual
 env/
 venv/
-venv/
+.venv/
+.env/
 # Cache do Python
 __pycache__/
 *.py[cod]
