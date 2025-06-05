@@ -17,7 +17,7 @@ from xml_process.cte_xml_carga import ProcessadorXML2
 from xml_process.cte_xml_geral import ProcessadorXML3
 from version_checker import VersionChecker
 
-current_version = "v0.5.4-alpha"
+current_version = "v0.5.5-alpha"
 repo_url = "https://api.github.com/repos/anotherDavidSousa/rodopar_interface_customtk/releases/latest"
 download_url = "https://github.com/anotherDavidSousa/rodopar_interface_customtk/releases/latest"
 
@@ -100,7 +100,7 @@ def validar_ticket(ticket, origem="BEMISA"):
             messagebox.showerror("Erro de Validação", "O ticket não pode começar com 0.")
             return False
 
-        valor_maximo = 189999
+        valor_maximo = 199999
         if int(ticket) > valor_maximo:
             messagebox.showerror("Erro de Validação", f"O ticket não pode ser maior que {valor_maximo}.")
             return False
