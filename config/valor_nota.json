@@ -37,7 +37,14 @@
             "cnpj_dest": "08720614000583",
             "campo_valor": "vProd",
             "Rota": "BEMISA X SARZEDO"
+        },
+        {
+            "cnpj_emit": "60894730002582",
+            "cnpj_dest": "20622890000180",
+            "campo_valor": "vProd",
+            "Rota": "USIMINAS X GOVERNADOR VALADARES"
         }
+
     ],
     "padrao": {
         "campo_valor": "vLiq"
