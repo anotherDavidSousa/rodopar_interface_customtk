@@ -43,6 +43,12 @@
             "cnpj_dest": "20622890000180",
             "campo_valor": "vProd",
             "Rota": "USIMINAS X GOVERNADOR VALADARES"
+        },
+        {
+            "cnpj_emit": "17469701006612",
+            "cnpj_dest": "42278796000270",
+            "campo_valor": "vProd",
+            "Rota": "ARCELORMITTALxCENIBRA"
         }
 
     ],
