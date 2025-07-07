@@ -49,6 +49,12 @@
             "cnpj_dest": "42278796000270",
             "campo_valor": "vProd",
             "Rota": "ARCELORMITTALxCENIBRA"
+        },
+                {
+            "cnpj_emit": "14373046000160",
+            "cnpj_dest": "53943098000187",
+            "campo_valor": "vProd",
+            "Rota": "Lhoist Doresopolis x BRACELL SP CELULOSE "
         }
 
     ],
