@@ -17,7 +17,7 @@ from xml_process.cte_xml_carga import ProcessadorXML2
 from xml_process.cte_xml_geral import ProcessadorXML3
 from version_checker import VersionChecker
 
-current_version = "v0.5.8-alpha"
+current_version = "v0.5.9-alpha"
 repo_url = "https://api.github.com/repos/anotherDavidSousa/rodopar_interface_customtk/releases/latest"
 download_url = "https://github.com/anotherDavidSousa/rodopar_interface_customtk/releases/latest"
 

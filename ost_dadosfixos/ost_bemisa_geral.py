@@ -24,7 +24,7 @@ def ost_bemisa_geral(placa):
         # Pergunta qual opção o usuário deseja
         escolha = simpledialog.askstring(
             "Escolha", 
-            "Escolha uma opção:\n1. TCB Bemisa - Timoteo\n2. Terminal João Correio - Santana do Paraíso"
+            "Escolha uma opção:\n1. TCB - Timoteo\n2. TBJC - Terminal João Correio - Santana do Paraíso\n3. TCS - Terminal de Cargas Sarzedo"
         )
 
         if escolha == "1":

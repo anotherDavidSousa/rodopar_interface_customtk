@@ -234,31 +234,45 @@ class ProcessadorXML:
 
             # Carrega o JSON (apenas uma vez)
             caminho_json_valor = os.path.join('config', 'valor_nota.json')
-
             with open(caminho_json_valor, 'r', encoding='utf-8') as g:
                 valor_nota = json.load(g)
 
-            # Determina o campo e se usou padrão
+            # Determina qual campo de valor usar (vNF ou vProd)
             campo_valor = None
-            usou_padrao = False  # Adicione essa flag
-
             for regra in valor_nota['regras']:
                 if dados.cnpj_emit == regra['cnpj_emit'] and dados.cnpj_dest == regra['cnpj_dest']:
                     campo_valor = regra['campo_valor']
-                    usou_padrao = False  # Veio de regra específica
                     break
-
             if not campo_valor:
                 campo_valor = valor_nota['padrao']['campo_valor']
-                usou_padrao = True  # Marca como padrão
 
-            # Escolhe a imagem correta
-            if usou_padrao:
+            # --- LÓGICA REAPROVEITÁVEL ---
+            # Lendo o JSON de faturamento novamente para determinar o tipo de serviço.
+            # Esta seção agora é autossuficiente.
+            path_json_faturamento_local = os.path.join('config', 'tipo_faturamento.json')
+            servico_local = "conhecimento_de_transporte" # Define um padrão
+            try:
+                with open(path_json_faturamento_local, 'r', encoding='utf-8') as arquivo_faturamento:
+                    faturamento_local = json.load(arquivo_faturamento)
+                
+                # Procura a combinação de CNPJs na lista de "ordem_de_servico"
+                for caso in faturamento_local.get("ordem_de_servico", []):
+                    if dados.cnpj_emit == caso.get("cnpj_emit") and dados.cnpj_dest == caso.get("cnpj_dest"):
+                        servico_local = "ordem_de_servico"
+                        break # Encontrou a regra, pode parar de procurar
+            except (FileNotFoundError, json.JSONDecodeError) as e:
+                print(f"Erro ao ler o JSON de faturamento local: {e}")
+                # O código continuará com o padrão "conhecimento_de_transporte" se houver erro
+
+            # Clica na imagem correta com base no tipo de serviço verificado localmente
+            if servico_local == "conhecimento_de_transporte":
+                print("Clicando em 'Valor' para Conhecimento de Transporte.")
                 wait_and_click(rotulos.imagens_valor, deslocamento_x=50)
-            else:
+            else: # Se for "ordem_de_servico"
+                print("Clicando em 'Valor Mercadoria' para Ordem de Serviço.")
                 wait_and_click(rotulos.imagens_valor_mercadoria_ost_tcb, deslocamento_x=50)
-
-            # Comando comum para ambos os casos
+            
+            # Preenche o valor
             time.sleep(tempo)
             pyautogui.write(getattr(dados, campo_valor))
                 

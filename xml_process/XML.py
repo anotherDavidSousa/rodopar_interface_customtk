@@ -170,9 +170,9 @@ class DadosXML:
 
         print("Chave",self.chNFe)
         print("data",self.dhRecbto)
-        print("peso",self.pesoL)
-        print("valor",self.vLiq)
-        print("valor",self.vProd)
+        print("peso pesoL",self.pesoL)
+        print("valor vliq",self.vLiq)
+        print("valor Vprod",self.vProd)
         print("produto atlas",self.atlas_prod)
         print("transportadora",self.fertran)
         print("numero da nota",self.nNF)
