@@ -156,7 +156,11 @@ class DadosXML:
         self.natOp = extrair_valor_elemento(root, './/{http://www.portalfiscal.inf.br/nfe}ide/{http://www.portalfiscal.inf.br/nfe}natOp')
         self.serie_nf = extrair_valor_elemento(root, './/{http://www.portalfiscal.inf.br/nfe}ide/{http://www.portalfiscal.inf.br/nfe}serie')
         self.cnpj_emit = extrair_valor_elemento(root, './/{http://www.portalfiscal.inf.br/nfe}emit/{http://www.portalfiscal.inf.br/nfe}CNPJ')
+        if not self.cnpj_emit:
+            self.cnpj_emit = extrair_valor_elemento(root, './/{http://www.portalfiscal.inf.br/nfe}emit/{http://www.portalfiscal.inf.br/nfe}CPF')
         self.cnpj_dest = extrair_valor_elemento(root, './/{http://www.portalfiscal.inf.br/nfe}dest/{http://www.portalfiscal.inf.br/nfe}CNPJ')
+        if not self.cnpj_dest:
+            self.cnpj_dest = extrair_valor_elemento(root, './/{http://www.portalfiscal.inf.br/nfe}dest/{http://www.portalfiscal.inf.br/nfe}CPF')
         self.nome_dest = extrair_valor_elemento(root, './/{http://www.portalfiscal.inf.br/nfe}dest/{http://www.portalfiscal.inf.br/nfe}xNome')
         self.nome_emit = extrair_valor_elemento(root, './/{http://www.portalfiscal.inf.br/nfe}emit/{http://www.portalfiscal.inf.br/nfe}xNome')
         self.nome_entrega = extrair_valor_elemento(root, './/{http://www.portalfiscal.inf.br/nfe}entrega/{http://www.portalfiscal.inf.br/nfe}xNome')
@@ -167,6 +171,7 @@ class DadosXML:
         self.tomador_frete = extrair_valor_elemento(root, './/{http://www.portalfiscal.inf.br/nfe}transp/{http://www.portalfiscal.inf.br/nfe}modFrete')
         
         self.validar_natureza_operacao(self.natOp, self.produto)
+        
 
         print("Chave",self.chNFe)
         print("data",self.dhRecbto)
@@ -178,7 +183,7 @@ class DadosXML:
         print("numero da nota",self.nNF)
         print("serie",self.serie_nf)
         print("cnpj emissor",self.cnpj_emit)
-        print("cnpj destinarario",self.cnpj_dest)
+        print("cnpj destinatario",self.cnpj_dest)
         print("nome emitente",self.nome_emit)
         print("nome destinario",self.nome_dest)
         print("nome local de entrega se tiver",self.nome_entrega)
