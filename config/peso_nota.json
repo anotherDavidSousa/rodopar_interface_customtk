@@ -41,6 +41,18 @@
             "cnpj_dest": "17469701006612",
             "campo_peso": "pesoB",
             "Rota": "MGOXIDOS X JOÃO MONLEVADE"
+        },
+                {
+            "cnpj_emit": "36665147000148",
+            "cnpj_dest": "31096483000284",
+            "campo_peso": "pesoqCom",
+            "Rota": "SCAVARE X TBJC"
+        },
+                        {
+            "cnpj_emit": "18329060000118",
+            "cnpj_dest": "31096483000284",
+            "campo_peso": "pesoqCom",
+            "Rota": "PEDREIRA UM X TBJC"
         }
     ],
     "padrao": {

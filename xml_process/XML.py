@@ -4,7 +4,7 @@ from datetime import datetime
 import tkinter as tk
 from tkinter import filedialog, messagebox
 import winsound
-
+from utils import falar
 beep_wav = "media/audio/beep.wav"
 def tocar_alarme_wav(beep_wav):
     """Toca um alarme sonoro usando um arquivo .wav."""
@@ -92,11 +92,13 @@ class DadosXML:
             mostrar_avisos(mensagem)
 
     def validar_natureza_operacao(self, natOp, produto):
-        if natOp =='REMESSA P/ FORMACAO DE LOTE FERROVIARIO' and produto == 'MINERIO DE FERRO SINTER FEED M05' or produto == 'MINERIO DE FERRO SINTER FEED M05':
-            mensagem = (f"Essa Nota tem 99% de ser uma nota de troca que não deve ser manifestada, por favor confira a nota antes de continuar")
+        if natOp =='REMESSA P/ FORMACAO DE LOTE FERROVIARIO' or natOp =='REM. FORM. LOTE FERROV. (DIF)' or produto == 'MINERIO DE FERRO SINTER FEED M05' or produto == 'MINERIO DE FERRO SINTER FEED M05':
+            mensagem = (f"ESSA NOTA PARECE SER UMA NOTA DE TROCA \n E NÃO DEVE SER MANIFESTADA \n POR FAVOR CONFIRA A NOTA")
             print("AVISO:", mensagem)
             tocar_alarme_wav(beep_wav)  # Toca um arquivo de alerta específico
+            falar('NOTA DE TROCA,\n VERIFIQUE O RODAPÉ DA NOTA FISCAL PARA LOCALIZAR O NUMERO DA NOTA CORRETA')
             mostrar_avisos(mensagem)
+            
 
 
 
