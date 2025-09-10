@@ -17,7 +17,7 @@ from xml_process.cte_xml_carga import ProcessadorXML2
 from xml_process.cte_xml_geral import ProcessadorXML3
 from version_checker import VersionChecker
 
-current_version = "v0.6.2-alpha"
+current_version = "v0.6.3-alpha"
 repo_url = "https://api.github.com/repos/anotherDavidSousa/rodopar_interface_customtk/releases/latest"
 download_url = "https://github.com/anotherDavidSousa/rodopar_interface_customtk/releases/latest"
 
@@ -324,13 +324,13 @@ def verificar_entrada(event):
         entrada = entrada.upper()
 
 
-        if entrada.startswith("OQE1I85") and (entrada == "OQE1I85" or entrada.endswith("MG") or entrada.endswith("SP")):
+        if entrada.startswith("OQE1I85") and (entrada == "OQE1I85" or entrada.endswith("MG")):
             formatada = "OQE 1I85"
             entry_widget.delete(0, ctk.END)
             entry_widget.insert(0, formatada)
             return
 
-        if entrada.endswith("MG") or entrada.endswith("SP"):
+        if entrada.endswith("MG"):
             entrada_sem_uf = entrada[:-2] 
             entry_widget.delete(0, ctk.END)
             entry_widget.insert(0, entrada_sem_uf)
