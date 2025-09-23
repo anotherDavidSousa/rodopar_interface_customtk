@@ -152,6 +152,12 @@ class ProcessadorXML:
                 time.sleep(tempo)
                 pyautogui.write('557')
                 time.sleep(tempo)
+                #PROSPER X TCB
+            elif dados.cnpj_emit == '22982925000460' and dados.cnpj_dest == '08720614000664' or dados.cnpj_emit == '16800211000149'and dados.cnpj_dest == '08720614000664':
+                repetidor.pressionar_tecla('tab',6)
+                time.sleep(tempo)
+                pyautogui.write('15643555000390')
+                time.sleep(tempo)
             time.sleep(tempo)
             wait_and_click(rotulos.imagens_compcarga,deslocamento_x=0)
             time.sleep(tempo)

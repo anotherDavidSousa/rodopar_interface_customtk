@@ -53,6 +53,12 @@
             "cnpj_dest": "31096483000284",
             "campo_peso": "pesoqCom",
             "Rota": "PEDREIRA UM X TBJC"
+        },
+                        {
+            "cnpj_emit": "46246921000210",
+            "cnpj_dest": "31096483000284",
+            "campo_peso": "pesoqCom",
+            "Rota": "MONTE CRISTO"
         }
     ],
     "padrao": {
