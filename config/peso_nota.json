@@ -59,6 +59,12 @@
             "cnpj_dest": "31096483000284",
             "campo_peso": "pesoqCom",
             "Rota": "MONTE CRISTO"
+        },
+                                {
+            "cnpj_emit": "24680718000487",
+            "cnpj_dest": "17227422000105",
+            "campo_peso": "pesoB",
+            "Rota": "MG AGRO X GERDAU"
         }
     ],
     "padrao": {

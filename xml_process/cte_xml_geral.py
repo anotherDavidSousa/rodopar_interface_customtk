@@ -120,6 +120,11 @@ class ProcessadorXML3:
                 time.sleep(tempo)
                 pyautogui.write('15643555000471')
                 time.sleep(tempo)
+                #JOAO MONLEVADE X JOAO CORREIA
+            elif dados.cnpj_emit == '57966337000256' and dados.cnpj_dest == '08720614000664':
+                repetidor.pressionar_tecla('tab',6)
+                time.sleep(tempo)
+                pyautogui.write('15643555000471')
             time.sleep(0.5)
             repetidor.pressionar_tecla('tab', 1, 0.3)
             messagebox.showinfo("Info","Finalizado! \n dados fornecidos foram preenchidos, por favor continue manualmente.")
