@@ -9,6 +9,99 @@ import json
 
 repetidor = RepetidorTeclas()
 
+def carregar_config_terminal_entrega():
+    """Carrega as configurações de terminais de entrega do JSON."""
+    caminho_json = os.path.join('config', 'terminal_entrega.json')
+    try:
+        with open(caminho_json, 'r', encoding='utf-8') as arquivo:
+            return json.load(arquivo)
+    except FileNotFoundError:
+        falar("Arquivo de terminais de entrega não encontrado")
+        return {"regras_terminal_entrega": [], "regras_usiminas": []}
+    except json.JSONDecodeError:
+        falar("Erro no formato do JSON de terminais de entrega")
+        return {"regras_terminal_entrega": [], "regras_usiminas": []}
+
+
+def processar_terminal_entrega(dados, dt, tempo):
+    """Processa o preenchimento do terminal de entrega baseado no JSON."""
+    config = carregar_config_terminal_entrega()
+    
+    # Primeiro verifica se é USIMINAS (preenche campo DT)
+    for regra_usiminas in config.get("regras_usiminas", []):
+        if dados.cnpj_dest == regra_usiminas["cnpj_dest"]:
+            wait_and_click(rotulos.imagens_adicionais, deslocamento_x=0)
+            time.sleep(tempo)
+            wait_and_click(rotulos.imagens_nossaref)
+            time.sleep(tempo)
+            pyautogui.write(dt)
+            return True
+    
+    # Depois verifica as regras de terminal de entrega
+    for regra in config.get("regras_terminal_entrega", []):
+        if dados.cnpj_emit == regra["cnpj_emit"] and dados.cnpj_dest == regra["cnpj_dest"]:
+            repetidor.pressionar_tecla('tab', 6)
+            time.sleep(tempo)
+            
+            # Determina qual valor escrever no campo de terminal
+            if regra["tipo_preenchimento"] == "cnpj":
+                if regra["valor"] == "cnpj_dest":
+                    valor_terminal = dados.cnpj_dest
+                elif regra["valor"] == "cnpj_entrega":
+                    valor_terminal = dados.cnpj_entrega
+                else:
+                    # CNPJ fixo definido no JSON
+                    valor_terminal = regra["valor"]
+            elif regra["tipo_preenchimento"] == "codigo":
+                # Código fixo definido no JSON
+                valor_terminal = regra["valor"]
+            else:
+                valor_terminal = regra["valor"]
+            
+            pyautogui.write(valor_terminal)
+            time.sleep(tempo)
+            return True
+    
+    return False
+def carregar_config_pagador_frete():
+    """Carrega as configurações de pagador do frete do JSON."""
+    caminho_json = os.path.join('config', 'pagador_frete.json')
+    try:
+        with open(caminho_json, 'r', encoding='utf-8') as arquivo:
+            return json.load(arquivo)
+    except FileNotFoundError:
+        falar("Arquivo de pagador de frete não encontrado")
+        return {"regras_fixas": []}
+    except json.JSONDecodeError:
+        falar("Erro no formato do JSON de pagador de frete")
+        return {"regras_fixas": []}
+
+
+def obter_pagador_frete(cnpj_emit, cnpj_dest, tomador_frete_nota):
+    """
+    Determina quem é o pagador do frete.
+    
+    Parâmetros:
+    - cnpj_emit: CNPJ do emitente
+    - cnpj_dest: CNPJ do destinatário
+    - tomador_frete_nota: Valor que veio na nota fiscal (0 ou 1)
+    
+    Retorna:
+    - '0' se remetente paga
+    - '1' se destinatário paga
+    """
+    config = carregar_config_pagador_frete()
+    
+    # Verifica se existe regra fixa para essa combinação
+    for regra in config.get("regras_fixas", []):
+        if cnpj_emit == regra["cnpj_emit"] and cnpj_dest == regra["cnpj_dest"]:
+            print(f"✓ Regra fixa encontrada: {regra['descricao']} - Pagador: {'Remetente' if regra['pagador'] == '0' else 'Destinatário'}")
+            return regra["pagador"]
+    
+    # Se não encontrou regra fixa, usa o valor da nota
+    print(f"✓ Sem regra fixa. Usando valor da nota - Pagador: {'Remetente' if tomador_frete_nota == '0' else 'Destinatário'}")
+    return tomador_frete_nota
+
 class ProcessadorXML:
     @staticmethod
     def processar_arquivo(placa, dt, tempo):
@@ -98,71 +191,37 @@ class ProcessadorXML:
             time.sleep(tempo)
                 
             repetidor.pressionar_tecla('enter', 4, 0.3)
-            if dados.tomador_frete == '1':
-                wait_and_click(rotulos.imagens_pagador,deslocamento_x=60)
+            pagador_frete_correto = obter_pagador_frete(dados.cnpj_emit, dados.cnpj_dest, dados.tomador_frete)
+
+            if pagador_frete_correto == '1':
+                # Destinatário paga o frete
+                wait_and_click(rotulos.imagens_pagador, deslocamento_x=60)
                 time.sleep(tempo)
                 pyautogui.write(dados.cnpj_dest)
                 repetidor.pressionar_tecla('tab', 1, 0.3)
-                wait_and_click(rotulos.imagens_remetente,deslocamento_x=60)
+                wait_and_click(rotulos.imagens_remetente, deslocamento_x=60)
                 time.sleep(tempo)
                 pyautogui.write(dados.cnpj_emit)
                 repetidor.pressionar_tecla('tab', 1, 0.3)
-                wait_and_click(rotulos.imagens_destinatario,deslocamento_x=60)
+                wait_and_click(rotulos.imagens_destinatario, deslocamento_x=60)
                 time.sleep(tempo)
                 pyautogui.write(dados.cnpj_dest)
             else:
-                wait_and_click(rotulos.imagens_pagador,deslocamento_x=60)
+                # Remetente paga o frete (pagador_frete_correto == '0')
+                wait_and_click(rotulos.imagens_pagador, deslocamento_x=60)
                 time.sleep(tempo)
                 pyautogui.write(dados.cnpj_emit)
                 repetidor.pressionar_tecla('tab', 1, 0.3)
-                wait_and_click(rotulos.imagens_remetente,deslocamento_x=60)
+                wait_and_click(rotulos.imagens_remetente, deslocamento_x=60)
                 time.sleep(tempo)
                 pyautogui.write(dados.cnpj_emit)
                 repetidor.pressionar_tecla('tab', 1, 0.3)
-                wait_and_click(rotulos.imagens_destinatario,deslocamento_x=60)
+                wait_and_click(rotulos.imagens_destinatario, deslocamento_x=60)
                 time.sleep(tempo)
                 pyautogui.write(dados.cnpj_dest)
             
             time.sleep(0.5)
-            if dados.cnpj_emit == '08720614000664' and dados.cnpj_dest == '08720614000907':
-                repetidor.pressionar_tecla('tab',6)
-                time.sleep(tempo)
-                pyautogui.write(dados.cnpj_dest)
-                time.sleep(tempo)
-            elif dados.cnpj_dest == '60894730002582':
-                wait_and_click(rotulos.imagens_adicionais,deslocamento_x=0)
-                time.sleep(tempo)
-                #wait_and_click(rotulos.imagens_adicionais,deslocamento_x=100, deslocamento_y=40)
-                wait_and_click(rotulos.imagens_nossaref)
-                time.sleep(tempo)
-                pyautogui.write(dt)
-                #mineração guanhaes para joão correia
-            elif dados.cnpj_emit == '17903693000125' and dados.cnpj_dest == '08720614000664':
-                repetidor.pressionar_tecla('tab',6)
-                time.sleep(tempo)
-                pyautogui.write(dados.cnpj_entrega)
-                time.sleep(tempo)
-            elif dados.cnpj_emit == '31732059000106' and dados.cnpj_dest == '31096483000284':
-                repetidor.pressionar_tecla('tab',6)
-                time.sleep(tempo)
-                pyautogui.write('15643555000471')
-                time.sleep(tempo)
-            elif dados.cnpj_emit == '08720614000664' and dados.cnpj_dest == '08720614000583':
-                repetidor.pressionar_tecla('tab',6)
-                time.sleep(tempo)
-                pyautogui.write('557')
-                time.sleep(tempo)
-                #PROSPER X TCB
-            elif dados.cnpj_emit == '22982925000460' and dados.cnpj_dest == '08720614000664' or dados.cnpj_emit == '16800211000149'and dados.cnpj_dest == '08720614000664':
-                repetidor.pressionar_tecla('tab',6)
-                time.sleep(tempo)
-                pyautogui.write('15643555000390')
-                time.sleep(tempo)
-            elif dados.cnpj_emit == '57966337000256' and dados.cnpj_dest == '08720614000664':
-                repetidor.pressionar_tecla('tab',6)
-                time.sleep(tempo)
-                pyautogui.write('15643555000471')
-                time.sleep(tempo)
+            processar_terminal_entrega(dados, dt, tempo)
             time.sleep(tempo)
             wait_and_click(rotulos.imagens_compcarga,deslocamento_x=0)
             time.sleep(tempo)

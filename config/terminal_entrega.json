@@ -1,0 +1,32 @@
+{
+    "regras_terminal_entrega": [
+        {
+            "cnpj_emit": "00514998000495",
+            "cnpj_dest": "15643555000390",
+            "tipo_preenchimento": "cnpj",
+            "valor": "cnpj_dest",
+            "descricao": "Bemisa x Terminal de entrega - TCB"
+        },
+        {
+            "cnpj_emit": "00514998000495",
+            "cnpj_dest": "15643555000471",
+            "tipo_preenchimento": "cnpj",
+            "valor": "cnpj_dest",
+            "descricao": "Bemisa x Terminal de entrega - TBJC"
+        },
+                {
+            "cnpj_emit": "57966337000256",
+            "cnpj_dest": "00514998000495",
+            "tipo_preenchimento": "cnpj",
+            "valor": "cnpj_dest",
+            "descricao": "BEMISA PEDRA BRANCA x Terminal de entrega - BEMISA"
+        }
+    ],
+    "regras_usiminas": [
+        {
+            "cnpj_dest": "60894730002582",
+            "campo": "dt",
+            "descricao": "USIMINAS - Preenche campo DT (Nossa Referência) com a data"
+        }
+    ]
+}

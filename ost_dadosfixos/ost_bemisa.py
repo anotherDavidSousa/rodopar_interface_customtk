@@ -30,26 +30,28 @@ def ost_bemisa(placa, ticket, peso, emissao):
 
         if escolha == "1":
             # Dados para TCB Bemisa - Timoteo
-            pagador_cnpj = '08720614000664'
-            remetente_cnpj = '08720614000664'
+            pagador_cnpj = '00514998000495'
+            remetente_cnpj = '00514998000495'
             destinatario_cnpj = '15643555000390'
+            terminal_entrega = '15643555000390'
             codigo_fiscal = '5905'
             falar('Manifestando para Timoteo TCB')
             escolha_texto = "TCB"
         elif escolha == "2":
             # Dados para Terminal João Correio - Santana do Paraíso
-            pagador_cnpj = '08720614000664'
-            remetente_cnpj = '08720614000664'
+            pagador_cnpj = '00514998000495'
+            remetente_cnpj = '00514998000495'
             destinatario_cnpj = '15643555000471'
+            terminal_entrega = '15643555000471'
             codigo_fiscal = '5905'
             falar('Manifestando para Terminal João Correia')
             escolha_texto =  "TBJC"
         
         elif escolha == "3":
-            # Dados para Terminal João Correio - Santana do Paraíso
-            pagador_cnpj = '08720614000664'
-            remetente_cnpj = '08720614000664'
-            destinatario_cnpj = '08720614000664'
+            # Dados para Terminal SAZERDO - Santana do Paraíso
+            pagador_cnpj = '00514998000495'
+            remetente_cnpj = '00514998000495'
+            destinatario_cnpj = '00514998000495'
             terminal_entrega = '07695967000184'
             codigo_fiscal = '5101'
             falar('Manifestando para Terminal de cargas SARZEDO')
@@ -92,12 +94,10 @@ def ost_bemisa(placa, ticket, peso, emissao):
         wait_and_click(rotulos.imagens_destinatario,deslocamento_x=60)
         time.sleep(tempo)
         pyautogui.write(destinatario_cnpj)
-
-        if escolha == '3':
-                repetidor.pressionar_tecla('tab',6)
-                time.sleep(tempo)
-                pyautogui.write(terminal_entrega)
-                time.sleep(tempo)
+        repetidor.pressionar_tecla('tab',6)
+        time.sleep(tempo)
+        pyautogui.write(terminal_entrega)
+        time.sleep(tempo)
         time.sleep(0.3)
         wait_and_click(rotulos.imagens_compcarga,deslocamento_x=0)
         time.sleep(0.5)

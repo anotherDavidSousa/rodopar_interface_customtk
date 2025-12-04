@@ -55,6 +55,18 @@
             "cnpj_dest": "53943098000187",
             "campo_valor": "vProd",
             "Rota": "Lhoist Doresopolis x BRACELL SP CELULOSE "
+        },
+                        {
+            "cnpj_emit": "00514998000495",
+            "cnpj_dest": "15643555000390",
+            "campo_valor": "vProd",
+            "Rota": "Bemisa x Terminal de entrega - TCB"
+        },
+                                {
+            "cnpj_emit": "00514998000495",
+            "cnpj_dest": "15643555000471",
+            "campo_valor": "vProd",
+            "Rota": "Bemisa x Terminal de entrega - TBJC"
         }
 
     ],

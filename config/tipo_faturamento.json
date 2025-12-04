@@ -19,6 +19,16 @@
                 {  
             "cnpj_emit": "08720614000664",
             "cnpj_dest": "33390170001312"
+        },
+                {
+            "cnpj_emit": "00514998000495",
+            "cnpj_dest": "15643555000390",
+            "descricao": "Bemisa x TCB"
+        },
+                        {
+            "cnpj_emit": "00514998000495",
+            "cnpj_dest": "15643555000471",
+            "descricao": "Bemisa x TBJC"
         }
     ],
     "conhecimento_de_transporte": "padrão"

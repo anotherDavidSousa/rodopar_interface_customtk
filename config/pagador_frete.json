@@ -1,0 +1,13 @@
+
+{
+    "regras_fixas": [
+        {
+            "cnpj_emit": "00514998000495",
+            "cnpj_dest": "15643555000471",
+            "pagador": "0",
+            "descricao": "BEMISA x TBJC - Remetente sempre paga"
+        }
+
+    ],
+    "observacao": "Pagador: 0 = Remetente paga | 1 = Destinatário paga. Se a combinação não estiver nas regras_fixas, usa o valor que veio na nota fiscal (campo tomador_frete)."
+}

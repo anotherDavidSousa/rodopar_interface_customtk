@@ -65,6 +65,12 @@
             "cnpj_dest": "17227422000105",
             "campo_peso": "pesoB",
             "Rota": "MG AGRO X GERDAU"
+        },
+                                {
+            "cnpj_emit": "17903693000125",
+            "cnpj_dest": "00514998000495",
+            "campo_peso": "pesoqCom",
+            "Rota": "MIG X Terminal Bemisa"
         }
     ],
     "padrao": {
