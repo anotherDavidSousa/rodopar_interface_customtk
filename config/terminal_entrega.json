@@ -1,24 +1,17 @@
 {
     "regras_terminal_entrega": [
         {
-            "cnpj_emit": "00514998000495",
-            "cnpj_dest": "15643555000390",
+            "cnpj_emit": "16800211000149",
+            "cnpj_dest": "00514998000495",
             "tipo_preenchimento": "cnpj",
-            "valor": "cnpj_dest",
-            "descricao": "Bemisa x Terminal de entrega - TCB"
-        },
-        {
-            "cnpj_emit": "00514998000495",
-            "cnpj_dest": "15643555000471",
-            "tipo_preenchimento": "cnpj",
-            "valor": "cnpj_dest",
-            "descricao": "Bemisa x Terminal de entrega - TBJC"
+            "valor": "15643555000390",
+            "descricao": "POSITIVA x Terminal de entrega - TCB"
         },
                 {
             "cnpj_emit": "57966337000256",
             "cnpj_dest": "00514998000495",
             "tipo_preenchimento": "cnpj",
-            "valor": "cnpj_dest",
+            "valor": "00514998000495",
             "descricao": "BEMISA PEDRA BRANCA x Terminal de entrega - BEMISA"
         }
     ],

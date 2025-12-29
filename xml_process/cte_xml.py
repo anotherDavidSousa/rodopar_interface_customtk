@@ -341,12 +341,14 @@ class ProcessadorXML:
             else: # Se for "ordem_de_servico"
                 print("Clicando em 'Valor Mercadoria' para Ordem de Serviço.")
                 wait_and_click(rotulos.imagens_valor_mercadoria_ost_tcb, deslocamento_x=50)
-            
+    
             # Preenche o valor
             time.sleep(tempo)
             pyautogui.write(getattr(dados, campo_valor))
                 
             repetidor.pressionar_tecla('tab', 1, 0.3)
+            if dados.cnpj_emit == "00514998000495" and dados.cnpj_dest == "15643555000471" or dados.cnpj_emit == "00514998000495" and dados.cnpj_dest == "15643555000390":
+                pyautogui.write("0,01")
             messagebox.showinfo("Info","Finalizado! \n dados fornecidos foram preenchidos, por favor continue manualmente.")
         else:
             messagebox.showinfo("Info","Tarefa cancelada pelo usuário")
