@@ -10,7 +10,7 @@ import json
 #DELETAR ARQUIVOS PDF E XML DA PASTA DE DOWNLOAD
 def deletar_xml_na_pasta():
     user_profile = os.getenv('USERPROFILE')
-    if user_profile and "claudio" in user_profile.lower():
+    if user_profile and "david" in user_profile.lower():
         pasta_especifica = r"D:\Downloads"
     else:
         downloads_path = os.path.join(user_profile, 'Downloads')
