@@ -17,7 +17,7 @@ from xml_process.cte_xml_carga import ProcessadorXML2
 from xml_process.cte_xml_geral import ProcessadorXML3
 from version_checker import VersionChecker
 
-current_version = "v0.6.10-alpha"
+current_version = "v0.6.11-alpha"
 repo_url = "https://api.github.com/repos/anotherDavidSousa/rodopar_interface_customtk/releases/latest"
 download_url = "https://github.com/anotherDavidSousa/rodopar_interface_customtk/releases/latest"
 
@@ -395,14 +395,14 @@ def verificar_ano(event, text_field):
     if len(entrada_limpa) >= 8:
         ano = entrada_limpa[4:8]  # Extrai o ano (4ª a 8ª posições)
 
-        if ano != "2025" and not ano_confirmado:
+        if ano != "2026" and not ano_confirmado:
             # Reproduz o som de alerta
-            falar(f"O ano informado é {ano}, o ano atual é 2025. Deseja continuar assim mesmo?")
+            falar(f"O ano informado é {ano}, o ano atual é 2026. Deseja continuar assim mesmo?")
 
             # Solicita confirmação ao usuário
             resposta = messagebox.askyesno(
                 "Confirmação",
-                f"O ano informado é {ano}, o ano atual é 2025. Deseja continuar assim mesmo?"
+                f"O ano informado é {ano}, o ano atual é 2026. Deseja continuar assim mesmo?"
             )
 
             if resposta:
