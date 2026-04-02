@@ -88,6 +88,7 @@ class ProcessadorXML3:
                 time.sleep(tempo)
                 pyautogui.write(dados.cnpj_emit)
                 repetidor.pressionar_tecla('tab', 1, 0.3)
+                repetidor.pressionar_tecla('enter', 1, 0.3)
                 wait_and_click(rotulos.imagens_remetente,deslocamento_x=60)
                 time.sleep(tempo)
                 pyautogui.write(dados.cnpj_emit)
