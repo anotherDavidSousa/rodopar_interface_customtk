@@ -17,7 +17,7 @@ from xml_process.cte_xml_carga import ProcessadorXML2
 from xml_process.cte_xml_geral import ProcessadorXML3
 from version_checker import VersionChecker
 
-current_version = "v0.7.0"
+current_version = "v0.7.0" 
 repo_url = "https://api.github.com/repos/anotherDavidSousa/rodopar_interface_customtk/releases/latest"
 download_url = "https://github.com/anotherDavidSousa/rodopar_interface_customtk/releases/latest"
 
@@ -44,7 +44,7 @@ def on_close():
         monitor_thread.join()  
     app.quit()  
 
-
+#...
 #CTE E XML EM GERAL
 def Manifestar_by_xml():
     placa = placa_cte_text.get()
